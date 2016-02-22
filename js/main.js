@@ -1,9 +1,9 @@
-const L       = require('leaflet')
+var L             = require('leaflet')
 
-const sidebar = require('./sidebar')
-const getJson = require('./getJson')
+var getJson       = require('./getJson')
+var renderSidebar = require('./sidebar.jsx')
 
-const map = L.map('map')
+var map = L.map('map')
 
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
@@ -16,28 +16,30 @@ map.zoomControl.setPosition("bottomright")
 getJson('/api/geo.json').then(json => addRooms(json))
 
 function addRooms(json) {
-  const style = feature => ({
-    color: feature.properties.fill,
-    stroke: 0
-  })
-
-  const clickHandler = e => {
-    sidebar.setRoom(e.target.feature.properties.id)
+  function style(feature) {
+    return { 
+      color: feature.properties.fill,
+      stroke: 0
+    }
   }
 
-  const hoverHandler = e => {
+  function clickHandler(e) {
+    renderSidebar(e.target.feature.properties.id)
+  }
+
+  function hoverHandler(e) {
     e.target.setStyle({
         stroke: 1,
     });
   }
   
-  const leaveHandler = e => {
+  function leaveHandler(e) {
     e.target.setStyle({
         stroke: 0,
     });
   }
 
-  const addHandlers = (feature, layer) => {
+  function addHandlers(feature, layer) {
     layer.on({
       click: clickHandler,
       mouseover: hoverHandler,
@@ -45,7 +47,7 @@ function addRooms(json) {
     })
   }
 
-  const geoJson = L.geoJson(json, {
+  var geoJson = L.geoJson(json, {
     style: style,
     onEachFeature: addHandlers
   })

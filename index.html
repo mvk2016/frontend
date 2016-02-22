@@ -10,23 +10,7 @@
 <body>
   <div id="map"></div>
   
-  <div id="sidebar">
-    <script type="text/x-mustache-template">
-
-      <span class="glyphicon glyphicon-remove close"></span>
-      <h1>{{roomname}}</h1>
-      <div id="data">
-        <h2>Data</h2>
-        <ul>
-          {{#data}}
-            <li>{{name}}: {{value}} <i>{{lastupdate}}</i></li>
-          {{/data}}
-        </ul>
-      </div>
-      <div id="graph"></div>
-
-    </script>
-  </div>
+  <div id="sidebarwrapper"></div>
 
   <script src="js/bundle.js"></script>
 </body>
