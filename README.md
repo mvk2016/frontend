@@ -1,12 +1,15 @@
 #Static Demo
 
-To keep things simple our development server will just be:
-
+To setup the environment run
 ```bash
-python -m SimpleHTTPServer 8000
+npm install
+```
+To start the development server run
+```bash
+node server.js
 ```
 
-which serves static files, from the current directory, on `localhost:8000`. This of course requires a python installation. SimpleHTTPServer is a module in the standard library, so if you already have a python installation you are good to go!
+The server currently only serves static files from the root directory.
 
 This demo uses mock data that is stored in the api directory.
 
