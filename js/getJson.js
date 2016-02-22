@@ -3,3 +3,5 @@
  */
 const getJson = url => fetch(url)
   .then(response => response.json());
+
+module.exports = getJson;

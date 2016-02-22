@@ -1,4 +1,7 @@
-'use strict'
+const L       = require('leaflet')
+
+const sidebar = require('./sidebar')
+const getJson = require('./getJson')
 
 const map = L.map('map')
 
@@ -19,16 +22,7 @@ function addRooms(json) {
   })
 
   const clickHandler = e => {
-    const id = e.target.feature.properties.id
-    if(sidebar.currentId != id) {
-      getJson('/api/rooms/' + id + '.json')
-        .then(json => {
-          sidebar.render(json)
-          sidebar.show()
-        })
-    } else {
-      sidebar.toggleShow()
-    }
+    sidebar.setRoom(e.target.feature.properties.id)
   }
 
   const hoverHandler = e => {

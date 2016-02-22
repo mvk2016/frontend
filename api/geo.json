@@ -7,7 +7,7 @@
         "stroke-width": 0,
         "stroke-opacity": 1,
         "stroke": "#000000",
-        "fill": "#2cd9f4",
+        "fill": "#0000FF",
         "fill-opacity": 0.5,
         "id": "blueroom"
       },
@@ -45,7 +45,7 @@
         "stroke": "#555555",
         "stroke-width": 0.2,
         "stroke-opacity": 1,
-        "fill": "#de4444",
+        "fill": "#FF0000",
         "fill-opacity": 0.5,
         "id": "redroom"
       },
@@ -83,7 +83,7 @@
         "stroke": "#555555",
         "stroke-width": 0,
         "stroke-opacity": 1,
-        "fill": "#7eff85",
+        "fill": "#00FF00",
         "fill-opacity": 0.5,
         "id": "greenroom"
       },
@@ -121,7 +121,7 @@
         "stroke": "#555555",
         "stroke-width": 0,
         "stroke-opacity": 1,
-        "fill": "#fcff81",
+        "fill": "#FFFF00",
         "fill-opacity": 0.5,
         "id": "yellowroom"
       },
