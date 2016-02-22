@@ -1,0 +1,15 @@
+{
+  "roomname": "Everything is burning!",
+  "data": [
+    {
+      "name": "temperature",
+      "value": 200,
+      "lastupdate": "2012-04-23T18:25:43.511Z"
+    },
+    {
+      "name": "humidity",
+      "value": 0.0,
+      "lastupdate": "2012-04-23T18:25:43.511Z"
+    }
+  ]
+}

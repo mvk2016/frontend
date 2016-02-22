@@ -1,0 +1,15 @@
+{
+  "roomname": "Room filled with Yello",
+  "data": [
+    {
+      "name": "temperature",
+      "value": 20,
+      "lastupdate": "2012-04-23T18:25:43.511Z"
+    },
+    {
+      "name": "humidity",
+      "value": 1.0,
+      "lastupdate": "2012-04-23T18:25:43.511Z"
+    }
+  ]
+}
