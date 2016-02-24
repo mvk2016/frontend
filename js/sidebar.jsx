@@ -51,11 +51,8 @@ class SidebarComponent extends React.Component {
     return this.state.visible ? (
       <div id='sidebar'>
         <span onClick={this.handleClose} className='glyphicon glyphicon-remove close'></span>
-        <br />
-        <br />
 
         <h1>{this.state.current.roomname}</h1>
-        <br />
 
         <div id='data' className="sidebar_item">
           <div className="sidebar_item_head">
@@ -72,7 +69,12 @@ class SidebarComponent extends React.Component {
             ))}
           </div>
         </div>
-        <LineChart data={this.state.history} />
+        <div className="sidebar_item">
+          <div className="sidebar_item_head">
+            <h2>Chart</h2>
+          </div>
+          <LineChart data={this.state.history} />
+        </div>
       </div>
     ) : false
   }
