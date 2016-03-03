@@ -32,7 +32,7 @@ function addRooms(json) {
         stroke: 1,
     });
   }
-  
+
   function leaveHandler(e) {
     e.target.setStyle({
         stroke: 0,
@@ -50,7 +50,7 @@ function addRooms(json) {
   if(currentFloor) map.removeLayer(currentFloor)
 
   currentFloor = L.geoJson(json, {
-    style: styles.random,
+    style: styles.tempToColor,
     onEachFeature: addHandlers
   })
 
