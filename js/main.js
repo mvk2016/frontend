@@ -1,12 +1,15 @@
-var L             = require('leaflet')
+var L       = require('leaflet')
+var io      = require('socket.io-client')
 
-var getJson       = require('./getJson')
-var styles        = require('./styles.js')
-var renderSidebar = require('./sidebar.jsx')
+var api     = require('./apiWrapper.js')
+var styles  = require('./styles.js')
+var sidebar = require('./sidebar.jsx')
+
+var socket  = io(api.baseUrl)
 
 var map = L.map('map')
-
-var currentFloor;
+var currentFloor,
+    currentFloorid;
 
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
@@ -16,15 +19,16 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 
 map.zoomControl.setPosition("bottomright")
 
-setFloor('/api/geo.json')
+setFloor('testfloor')
 
-function setFloor(url) {
-  getJson(url).then(json => addRooms(json))
+function setFloor(floorid) {
+  api.getFloor(floorid).then(json => addRooms(json))
+  currentFloorid = floorid;
 }
 
 function addRooms(json) {
   function clickHandler(e) {
-    renderSidebar(e.target.feature.properties)
+    sidebar.renderSidebar(currentFloorid, e.target.feature.properties)
   }
 
   function hoverHandler(e) {
@@ -65,13 +69,15 @@ function setStyleFunction(style) {
   });
 }
 
-function updateRoom(id, newItem) {
+function updateRoom(roomid, newItem) {
   currentFloor.eachLayer(function(layer) {
     var props = layer.feature.properties
-    if(props.id === id) {
+    if(props.roomid === roomid) {
       props.data = props.data.map(item => item.name == newItem.name ? newItem : item)
       layer.setStyle(layer.options.style(layer.feature))
-      renderSidebar(props)
+      sidebar.updateSidebar(currentFloorid, props)
     }
   });
 }
+
+socket.on('event', data => updateRoom(data.roomid, data.data))

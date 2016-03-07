@@ -3,9 +3,10 @@ var ReactDom  = require('react-dom')
 var LineChart = require('react-chartjs').Line
 var Loader    = require('react-loader')
 
-var getJson   = require('./getJson')
+var api       = require('./apiWrapper.js')
 
 var sidebarwrapper = document.querySelector('#sidebarwrapper')
+var currentId;
 
 class SidebarComponent extends React.Component {
   constructor(props) {
@@ -28,14 +29,14 @@ class SidebarComponent extends React.Component {
     if(this.props.roomid === props.roomid && this.props.data === props.data) {
       this.setState({visible: !this.state.visible})
     }
-    else {
+    else if(this.props.roomid !== props.roomid) {
       this.getHistory(props.roomid)
     }
   }
 
   getHistory(roomid) {
     this.setState({loaded: false})
-    getJson('/api/history/' + roomid + '.json').then(json => {
+    api.getHistory(this.props.floorid, roomid).then(json => {
       this.setState({history: json, loaded: true})
     })
   }
@@ -78,11 +79,30 @@ class SidebarComponent extends React.Component {
   }
 }
 
-function renderSidebar(props) {
+function renderSidebar(floorid, props) {
   ReactDom.render(
-    <SidebarComponent roomid={props.id} roomname={props.name} data={props.data}/>,
+    <SidebarComponent floorid={floorid}
+                      roomid={props.roomid}
+                      roomname={props.name}
+                      data={props.data} />,
     sidebarwrapper
   )
+  currentId = props.roomid
 }
 
-module.exports = renderSidebar
+function updateSidebar(floorid, props) {
+  if(props.roomid == currentId) { 
+    ReactDom.render(
+      <SidebarComponent floorid={floorid}
+                        roomid={props.roomid}
+                        roomname={props.name}
+                        data={props.data} />,
+      sidebarwrapper
+    )
+  }
+}
+
+module.exports = {
+  renderSidebar,
+  updateSidebar
+}
