@@ -13,7 +13,7 @@ function getFloor(floorid) {
 }
 
 function getHistory(floorid, roomid) {
-  return getJson(apiUrl + '/floors/' + floorid + '/rooms/' + roomid + '/history')
+  return getJson(apiUrl + '/floors/' + floorid + '/' + roomid + '/history')
 }
 
 module.exports = {
