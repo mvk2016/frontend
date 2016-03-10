@@ -21,6 +21,13 @@ function redroom(feature) {
 }
 
 function tempToColor(feature) {
+  return {
+    color: getTempColor(feature),
+    stroke: 0
+  };
+}
+
+function getTempColor(feature) {
   var elems = feature.properties.data.filter(function(elem) {
     return elem.name == "temperature";
   });
@@ -35,7 +42,7 @@ function tempToColor(feature) {
     return "#B7B7B7";
   }
 
-  var x = d < 0     ? '#9C2FAE' :
+  return  d < 0     ? '#9C2FAE' :
           d < 5     ? '#663FB4' :
           d < 10    ? '#4055B2' :
           d < 13    ? '#587CF7' :
@@ -47,16 +54,62 @@ function tempToColor(feature) {
           d < 32    ? '#FD9728' :
           d < 40    ? '#FB582F' :
                       '#FB2210' ;
+}
 
+function utilToColor(feature) {
   return {
-    color: x,
+    color: getUtilColor(feature),
     stroke: 0
   };
+}
+
+function getUtilColor(feature) {
+  var maxValues = feature.properties.data.filter(function(elem) {
+    return elem.name == "maxutilization";
+  });
+
+  var currentValues = feature.properties.data.filter(function(elem) {
+    return elem.name == "currentutilization";
+  });
+
+  if (maxValues.length > 0) {
+    var max = maxValues[0].value;
+  } else {
+    return "#B7B7B7";
+  }
+
+  if (currentValues.length > 0) {
+    var current = currentValues[0].value;
+  } else {
+    return "#B7B7B7";
+  }
+
+  if (typeof(max) != "number" || typeof(current) != "number") {
+    return "#B7B7B7";
+  }
+
+  if (max <= 0) {
+    return "#B7B7B7";
+  }
+
+  var res = current/max;
+
+  return  d < 0.1    ? '#00FF00' :
+          d < 0.2    ? '#33FF00' :
+          d < 0.3    ? '#66FF00' :
+          d < 0.4    ? '#99FF00' :
+          d < 0.5    ? '#CCFF00' :
+          d < 0.6    ? '#FFFF00' :
+          d < 0.7    ? '#FFCC00' :
+          d < 0.8    ? '#FF9900' :
+          d < 0.9    ? '#FF6600' :
+                       '#FF3300' ;
 }
 
 module.exports = {
   random,
   alwaysBlack,
   redroom,
-  tempToColor
+  tempToColor,
+  utilToColor
 }
