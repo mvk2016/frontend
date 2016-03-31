@@ -1,15 +1,44 @@
+var GoogleMapsLoader  = require('google-maps')
+var io                = require('socket.io-client')
+
+var api               = require('./apiWrapper.js')
+var styles            = require('./styles.js')
+var sidebar           = require('./sidebar.jsx')
+
+var map;
+var socket = io(api.baseUrl)
+
+GoogleMapsLoader.load(function(google) {
+  var mapDiv = document.getElementById('map');
+
+  map = new google.maps.Map(mapDiv, {
+    center: {lat: 59.3465985, lng: 18.0737873},
+    zoom: 20
+  });
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 var L       = require('leaflet')
-var io      = require('socket.io-client')
 
-var api     = require('./apiWrapper.js')
-var styles  = require('./styles.js')
-var sidebar = require('./sidebar.jsx')
 
-var socket  = io(api.baseUrl)
-
-var map = L.map('map')
 var currentFloor,
     currentFloorid;
+
+
 
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
@@ -81,3 +110,4 @@ function updateRoom(roomid, newItem) {
 }
 
 socket.on('event', data => updateRoom(data.roomid, data.data))
+*/
