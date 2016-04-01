@@ -20,7 +20,7 @@ GoogleMapsLoader.load(function(google) {
     center: {lat: 59.3465985, lng: 18.0737873},
     zoom: 20
   });
-  
+
   //TODO: move zoom controll
 
   map.data.addHandler('click', event => {
@@ -35,7 +35,9 @@ GoogleMapsLoader.load(function(google) {
   map.data.addHandler('mouseout', event => {
     event.feature.setProperty('acrive', false)
   })
-
+  
+  map.data.setStyle(styles.tempToColor);
+  
   setFloor('testfloor');
 })
 
@@ -63,26 +65,8 @@ function getBounds(features) {
 
 
 
-
-
-
-
-
-
-
-
-
-
 /*
 
-
-
-function setStyleFunction(style) {
-  currentFloor.eachLayer(function(layer) {
-    layer.options.style = style
-    layer.setStyle(style(layer.feature))
-  });
-}
 
 function updateRoom(roomid, newItem) {
   currentFloor.eachLayer(function(layer) {
@@ -97,16 +81,6 @@ function updateRoom(roomid, newItem) {
 
 socket.on('event', data => updateRoom(data.roomid, data.data))
 
-
-
-
-
-
-
-
-
-
-var L       = require('leaflet')
 
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
