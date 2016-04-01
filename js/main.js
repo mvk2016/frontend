@@ -20,7 +20,9 @@ GoogleMapsLoader.load(function(google) {
     center: {lat: 59.3465985, lng: 18.0737873},
     zoom: 20
   });
+  map.data.setStyle(styles.tempToColor);
   setFloor('testfloor');
+
 })
 
 /**
@@ -61,8 +63,9 @@ function addRooms(json) {
   currentFloor = map.data.addGeoJson(json);
 
   map.fitBounds(currentFloor.getBounds())
-}
 
+
+}
 
 
 
@@ -82,14 +85,6 @@ function addRooms(json) {
 
 /*
 
-
-
-function setStyleFunction(style) {
-  currentFloor.eachLayer(function(layer) {
-    layer.options.style = style
-    layer.setStyle(style(layer.feature))
-  });
-}
 
 function updateRoom(roomid, newItem) {
   currentFloor.eachLayer(function(layer) {
