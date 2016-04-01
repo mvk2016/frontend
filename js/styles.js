@@ -22,8 +22,8 @@ function redroom(feature) {
 
 function tempToColor(feature) {
   return {
-    color: getTempColor(feature),
-    stroke: 0
+    fillColor: getTempColor(feature),
+    strokeWeight: feature.getProperty('active') ? 1 : 0
   };
 }
 

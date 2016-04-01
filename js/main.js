@@ -21,19 +21,17 @@ GoogleMapsLoader.load(function(google) {
     zoom: 20
   });
 
-  //TODO: move zoom controll
-
-  map.data.addHandler('click', event => {
+  map.data.addListener('click', event => {
     sidebar.renderSidebar(currentFloorid, event.feature)
     event.feature.setProperty('active', true)
   })
 
-  map.data.addHandler('mouseover', event => {
+  map.data.addListener('mouseover', event => {
     event.feature.setProperty('active', true)
   })
 
-  map.data.addHandler('mouseout', event => {
-    event.feature.setProperty('acrive', false)
+  map.data.addListener('mouseout', event => {
+    event.feature.setProperty('active', false)
   })
   
   map.data.setStyle(styles.tempToColor);
@@ -52,7 +50,7 @@ function setFloor(floorid) {
 function addRooms(json) {
   if(currentFloor) map.removeLayer(currentFloor)
 
-  currentFloor = map.data.addGeoJson(json);
+  currentFloor = map.data.addGeoJson(json, {idPropertyName: 'roomid'});
 
   map.fitBounds(getBounds(currentFloor))
 }
