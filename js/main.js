@@ -20,6 +20,22 @@ GoogleMapsLoader.load(function(google) {
     center: {lat: 59.3465985, lng: 18.0737873},
     zoom: 20
   });
+  
+  //TODO: move zoom controll
+
+  map.data.addHandler('click', event => {
+    sidebar.renderSidebar(currentFloorid, event.feature)
+    event.feature.setProperty('active', true)
+  })
+
+  map.data.addHandler('mouseover', event => {
+    event.feature.setProperty('active', true)
+  })
+
+  map.data.addHandler('mouseout', event => {
+    event.feature.setProperty('acrive', false)
+  })
+
   setFloor('testfloor');
 })
 
@@ -32,41 +48,18 @@ function setFloor(floorid) {
 }
 
 function addRooms(json) {
-  function clickHandler(e) {
-    sidebar.renderSidebar(currentFloorid, e.target.feature.properties)
-  }
-
-  function hoverHandler(e) {
-    e.target.setStyle({
-        stroke: 1,
-    });
-  }
-
-  function leaveHandler(e) {
-    e.target.setStyle({
-        stroke: 0,
-    });
-  }
-
-  function addHandlers(feature, layer) {
-    layer.on({
-      click: clickHandler,
-      mouseover: hoverHandler,
-      mouseout: leaveHandler
-    })
-  }
-
   if(currentFloor) map.removeLayer(currentFloor)
 
   currentFloor = map.data.addGeoJson(json);
 
-  map.fitBounds(currentFloor.getBounds())
+  map.fitBounds(getBounds(currentFloor))
 }
 
-
-
-
-
+function getBounds(features) {
+    var bounds = new google.maps.LatLngBounds();
+    features.map(feature => bounds.extend(feature))
+    return bounds;
+}
 
 
 
