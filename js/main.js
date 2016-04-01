@@ -61,35 +61,9 @@ function getBounds(features) {
     return bounds;
 }
 
-
-
-/*
-
-
 function updateRoom(roomid, newItem) {
-  currentFloor.eachLayer(function(layer) {
-    var props = layer.feature.properties
-    if(props.roomid === roomid) {
-      props.data = props.data.map(item => item.name == newItem.name ? newItem : item)
-      layer.setStyle(layer.options.style(layer.feature))
-      sidebar.updateSidebar(currentFloorid, props)
-    }
-  });
+  var feature = map.data.getFeatureById(roomid);
+  feature.setProperty('data', feature.getProperty('data').map(item => item.name == newItem.name ? newItem : item))
 }
 
-socket.on('event', data => updateRoom(data.roomid, data.data))
-
-
-L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 22,
-    maxNativeZoom: 18
-}).addTo(map)
-
-map.zoomControl.setPosition("bottomright")
-
-
-
-
-
-*/
+socket.on('event', data => updateRoom(data.roomid, data.data));
