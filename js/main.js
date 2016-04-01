@@ -22,7 +22,7 @@ GoogleMapsLoader.load(function(google) {
   });
 
   map.data.addListener('click', event => {
-    sidebar.renderSidebar(currentFloorid, event.feature)
+    sidebar.renderSidebar(currentFloorid, event.feature.R)
     event.feature.setProperty('active', true)
   })
 
@@ -64,6 +64,7 @@ function getBounds(features) {
 function updateRoom(roomid, newItem) {
   var feature = map.data.getFeatureById(roomid);
   feature.setProperty('data', feature.getProperty('data').map(item => item.name == newItem.name ? newItem : item))
+  sidebar.updateSidebar(currentFloorid, feature.R);
 }
 
 socket.on('event', data => updateRoom(data.roomid, data.data));
