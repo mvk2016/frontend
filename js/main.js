@@ -20,18 +20,12 @@ GoogleMapsLoader.load(function(google) {
     center: {lat: 59.3465985, lng: 18.0737873},
     zoom: 20
   });
+  setFloor('testfloor');
 })
 
 /**
-  * Fetch floor data and draw the floor
-  */
-setFloor('testfloor')
-
-
-
-
-
-
+ * Fetch floor data and draw the floor
+ */
 function setFloor(floorid) {
   api.getFloor(floorid).then(json => addRooms(json));
   currentFloorid = floorid;
@@ -64,12 +58,8 @@ function addRooms(json) {
 
   if(currentFloor) map.removeLayer(currentFloor)
 
-  currentFloor = L.geoJson(json, {
-    style: styles.tempToColor,
-    onEachFeature: addHandlers
-  })
+  currentFloor = map.data.addGeoJson(json);
 
-  map.addLayer(currentFloor)
   map.fitBounds(currentFloor.getBounds())
 }
 
