@@ -6,8 +6,13 @@ var styles            = require('./styles.js')
 var sidebar           = require('./sidebar.jsx')
 
 var map;
-var socket = io(api.baseUrl)
+var currentFloor,
+    currentFloorid;
+var socket            = io(api.baseUrl)
 
+/**
+  * Load the map into the div with id 'map'
+  */
 GoogleMapsLoader.load(function(google) {
   var mapDiv = document.getElementById('map');
 
@@ -17,41 +22,18 @@ GoogleMapsLoader.load(function(google) {
   });
 })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-var L       = require('leaflet')
-
-
-var currentFloor,
-    currentFloorid;
-
-
-
-L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 22,
-    maxNativeZoom: 18
-}).addTo(map)
-
-map.zoomControl.setPosition("bottomright")
-
+/**
+  * Fetch floor data and draw the floor
+  */
 setFloor('testfloor')
 
+
+
+
+
+
 function setFloor(floorid) {
-  api.getFloor(floorid).then(json => addRooms(json))
+  api.getFloor(floorid).then(json => addRooms(json));
   currentFloorid = floorid;
 }
 
@@ -91,6 +73,27 @@ function addRooms(json) {
   map.fitBounds(currentFloor.getBounds())
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+
 function setStyleFunction(style) {
   currentFloor.eachLayer(function(layer) {
     layer.options.style = style
@@ -110,4 +113,28 @@ function updateRoom(roomid, newItem) {
 }
 
 socket.on('event', data => updateRoom(data.roomid, data.data))
+
+
+
+
+
+
+
+
+
+
+var L       = require('leaflet')
+
+L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 22,
+    maxNativeZoom: 18
+}).addTo(map)
+
+map.zoomControl.setPosition("bottomright")
+
+
+
+
+
 */
