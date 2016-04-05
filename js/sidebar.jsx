@@ -61,7 +61,7 @@ class SidebarComponent extends React.Component {
             {data.map((item, index) => (
               <div key={item.name} className="sidebar_subitem">
                 <span>{item.name}</span>
-                <span className="right">{item.value}</span>
+                <span className="right">{Math.round(item.value * 10)/10}</span>
               </div>
             ))}
           </div>
