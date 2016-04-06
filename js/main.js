@@ -8,8 +8,7 @@ var sidebar           = require('./sidebar.jsx')
 var map;
 var currentFloor,
     currentFloorid;
-var socket            = io(api.baseUrl)
-var hidden = false;
+var socket            = io(api.baseUrl);
 
 /**
   * Load the map into the div with id 'map'
@@ -28,9 +27,10 @@ GoogleMapsLoader.load(function(google) {
     event.feature.setProperty('active', true);
 
     /*Animate stuff if conditions are met*/
-    if (currentRoomId === event.feature.R.roomid) { 
+    if (currentRoomId === event.feature.R.roomid || currentRoomId == undefined) {
+      var hidden = sidebar.getHidden();
       var animation = hidden ? "animate animateIn" : "animate animateOut";
-      hidden = !hidden;
+      sidebar.setHidden(!hidden);
       document.getElementById("sidebar").className = animation;
     }
   })
@@ -42,9 +42,9 @@ GoogleMapsLoader.load(function(google) {
   map.data.addListener('mouseout', event => {
     event.feature.setProperty('active', false)
   })
-  
+
   map.data.setStyle(styles.tempToColor);
-  
+
   setFloor('testfloor');
 })
 

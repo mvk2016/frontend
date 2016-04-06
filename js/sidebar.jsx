@@ -43,7 +43,9 @@ class SidebarComponent extends React.Component {
   }
 
   handleClose() {
-    this.setState({visible: false})
+    document.getElementById("sidebar").className = "animate animateOut";
+    hidden = false;
+    this.setState({visible: false});
   }
 
   render() {
@@ -108,8 +110,18 @@ function getRoomId() {
   return currentId;
 }
 
+function getHidden() {
+  return hidden;
+}
+
+function setHidden(newHidden) {
+  hidden = newHidden;
+}
+
 module.exports = {
   renderSidebar,
   updateSidebar,
-  getRoomId
+  getRoomId,
+  getHidden,
+  setHidden
 }
