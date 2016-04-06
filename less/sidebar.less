@@ -1,7 +1,7 @@
 #sidebar {
   position: absolute;
   top: 0;
-  left: 0;
+  left: 0; /*TODO:set to -400px*/
   width: 400px;
   height: 100vh;
   background-color: #f2f2f2;
@@ -73,4 +73,35 @@
   }
 }
 
+.animate {
+  animation-duration:0.75s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+}
 
+.animateIn {
+  animation-name: animateInKey;
+}
+
+.animateOut {
+  animation-name: animateOutKey;
+}
+
+@keyframes animateInKey {
+  0% {
+    left: -400px;
+  }
+  100% {
+    left: 0;
+  }
+}
+
+@keyframes animateOutKey {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: -400px;
+  }
+}

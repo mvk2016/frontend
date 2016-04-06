@@ -9,6 +9,7 @@ var map;
 var currentFloor,
     currentFloorid;
 var socket            = io(api.baseUrl)
+var hidden = false;
 
 /**
   * Load the map into the div with id 'map'
@@ -22,8 +23,16 @@ GoogleMapsLoader.load(function(google) {
   });
 
   map.data.addListener('click', event => {
-    sidebar.renderSidebar(currentFloorid, event.feature.R)
-    event.feature.setProperty('active', true)
+    var currentRoomId = sidebar.getRoomId();
+    sidebar.renderSidebar(currentFloorid, event.feature.R);
+    event.feature.setProperty('active', true);
+
+    /*Animate stuff if conditions are met*/
+    if (currentRoomId === event.feature.R.roomid) { 
+      var animation = hidden ? "animate animateIn" : "animate animateOut";
+      hidden = !hidden;
+      document.getElementById("sidebar").className = animation;
+    }
   })
 
   map.data.addListener('mouseover', event => {

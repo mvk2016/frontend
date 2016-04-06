@@ -7,6 +7,7 @@ var api       = require('./apiWrapper.js')
 
 var sidebarwrapper = document.querySelector('#sidebarwrapper')
 var currentId;
+var hidden = true;
 
 class SidebarComponent extends React.Component {
   constructor(props) {
@@ -47,7 +48,8 @@ class SidebarComponent extends React.Component {
 
   render() {
     var data = this.props.data;
-    return this.state.visible ? (
+
+    return (
       <div id='sidebar'>
         <span onClick={this.handleClose} className='glyphicon glyphicon-remove close'></span>
 
@@ -75,7 +77,7 @@ class SidebarComponent extends React.Component {
           </Loader>
         </div>
       </div>
-    ) : false
+    )
   }
 }
 
@@ -91,7 +93,7 @@ function renderSidebar(floorid, props) {
 }
 
 function updateSidebar(floorid, props) {
-  if(props.roomid == currentId) { 
+  if(props.roomid == currentId) {
     ReactDom.render(
       <SidebarComponent floorid={floorid}
                         roomid={props.roomid}
@@ -102,7 +104,12 @@ function updateSidebar(floorid, props) {
   }
 }
 
+function getRoomId() {
+  return currentId;
+}
+
 module.exports = {
   renderSidebar,
-  updateSidebar
+  updateSidebar,
+  getRoomId
 }
