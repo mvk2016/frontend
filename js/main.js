@@ -4,6 +4,7 @@ var io                = require('socket.io-client')
 var api               = require('./apiWrapper.js')
 var styles            = require('./styles.js')
 var sidebar           = require('./sidebar.jsx')
+var topbar            = require('./topbar.jsx')
 
 var map;
 var currentFloor,
@@ -29,7 +30,6 @@ GoogleMapsLoader.load(function(google) {
     /*Animate stuff if conditions are met*/
     if (currentRoomId === event.feature.R.roomid || currentRoomId == undefined || (currentRoomId != event.feature.R.roomid && sidebar.getHidden())) {
       var hidden = sidebar.getHidden();
-      console.log(hidden);
       var animation = hidden ? "animate animateIn" : "animate animateOut";
       sidebar.setHidden(!hidden);
       document.getElementById("sidebar").className = animation;
@@ -47,6 +47,8 @@ GoogleMapsLoader.load(function(google) {
   map.data.setStyle(styles.tempToColor);
 
   setFloor('testfloor');
+
+  topbar.renderTopbar();
 })
 
 /**
