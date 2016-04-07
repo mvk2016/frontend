@@ -27,7 +27,7 @@ GoogleMapsLoader.load(function(google) {
     event.feature.setProperty('active', true);
 
     /*Animate stuff if conditions are met*/
-    if (currentRoomId === event.feature.R.roomid || currentRoomId == undefined) {
+    if (currentRoomId === event.feature.R.roomid || currentRoomId == undefined || (currentRoomId != event.feature.R.roomid && sidebar.getHidden())) {
       var hidden = sidebar.getHidden();
       var animation = hidden ? "animate animateIn" : "animate animateOut";
       sidebar.setHidden(!hidden);

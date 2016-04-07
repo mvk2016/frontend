@@ -43,8 +43,9 @@ class SidebarComponent extends React.Component {
   }
 
   handleClose() {
+    console.log(hidden);
     document.getElementById("sidebar").className = "animate animateOut";
-    hidden = false;
+    hidden = true;
     this.setState({visible: false});
   }
 
