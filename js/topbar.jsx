@@ -15,12 +15,12 @@ class TopbarComponent extends React.Component {
   render() {
     var data = this.props.data;
 
-    console.log(__dirname + "/../imgs/y-logo-small.png");
+      console.log(__dirname + "/../imgs/y-logo-small.png");
 
     return (
       <div id="topbar">
         <span id="icon">
-          <img src={__dirname + "/../imgs/y-logo-small.png"} className="resize" />
+            <img src={__dirname + "/../imgs/y-logo-small.png"} className="resize" />
         </span>
 
         <span id="topbar-title">
