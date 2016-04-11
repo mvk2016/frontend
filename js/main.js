@@ -1,83 +1,82 @@
-var L       = require('leaflet')
-var io      = require('socket.io-client')
+var GoogleMapsLoader  = require('google-maps')
+var io                = require('socket.io-client')
 
-var api     = require('./apiWrapper.js')
-var styles  = require('./styles.js')
-var sidebar = require('./sidebar.jsx')
+var api               = require('./apiWrapper.js')
+var styles            = require('./styles.js')
+var sidebar           = require('./sidebar.jsx')
+var topbar            = require('./topbar.jsx')
 
-var socket  = io(api.baseUrl)
-
-var map = L.map('map')
+var map;
 var currentFloor,
     currentFloorid;
+var socket            = io(api.baseUrl);
 
-L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 22,
-    maxNativeZoom: 18
-}).addTo(map)
+/**
+  * Load the map into the div with id 'map'
+  */
+GoogleMapsLoader.load(function(google) {
+  var mapDiv = document.getElementById('map');
 
-map.zoomControl.setPosition("bottomright")
+  map = new google.maps.Map(mapDiv, {
+    center: {lat: 59.3465985, lng: 18.0737873},
+    zoom: 20
+  });
 
-setFloor('testfloor')
+  map.data.addListener('click', event => {
+    var currentRoomId = sidebar.getRoomId();
+    sidebar.renderSidebar(currentFloorid, event.feature.R);
+    event.feature.setProperty('active', true);
 
+    /*Animate stuff if conditions are met*/
+    if (currentRoomId === event.feature.R.roomid || currentRoomId == undefined || (currentRoomId != event.feature.R.roomid && sidebar.getHidden())) {
+      var hidden = sidebar.getHidden();
+      var animation = hidden ? "animate animateIn" : "animate animateOut";
+      sidebar.setHidden(!hidden);
+      document.getElementById("sidebar").className = animation;
+    }
+  })
+
+  map.data.addListener('mouseover', event => {
+    event.feature.setProperty('active', true)
+  })
+
+  map.data.addListener('mouseout', event => {
+    event.feature.setProperty('active', false)
+  })
+
+  map.data.setStyle(styles.tempToColor);
+
+  setFloor('testfloor');
+
+  topbar.renderTopbar();
+})
+
+/**
+ * Fetch floor data and draw the floor
+ */
 function setFloor(floorid) {
-  api.getFloor(floorid).then(json => addRooms(json))
+  api.getFloor(floorid).then(json => addRooms(json));
   currentFloorid = floorid;
 }
 
 function addRooms(json) {
-  function clickHandler(e) {
-    sidebar.renderSidebar(currentFloorid, e.target.feature.properties)
-  }
-
-  function hoverHandler(e) {
-    e.target.setStyle({
-        stroke: 1,
-    });
-  }
-
-  function leaveHandler(e) {
-    e.target.setStyle({
-        stroke: 0,
-    });
-  }
-
-  function addHandlers(feature, layer) {
-    layer.on({
-      click: clickHandler,
-      mouseover: hoverHandler,
-      mouseout: leaveHandler
-    })
-  }
-
   if(currentFloor) map.removeLayer(currentFloor)
 
-  currentFloor = L.geoJson(json, {
-    style: styles.tempToColor,
-    onEachFeature: addHandlers
-  })
+  currentFloor = map.data.addGeoJson(json, {idPropertyName: 'roomid'});
 
-  map.addLayer(currentFloor)
-  map.fitBounds(currentFloor.getBounds())
+  map.fitBounds(getBounds(currentFloor))
 }
 
-function setStyleFunction(style) {
-  currentFloor.eachLayer(function(layer) {
-    layer.options.style = style
-    layer.setStyle(style(layer.feature))
-  });
+function getBounds(features) {
+    var bounds = new google.maps.LatLngBounds();
+    features.map(feature => bounds.extend(feature))
+    return bounds;
 }
 
 function updateRoom(roomid, newItem) {
-  currentFloor.eachLayer(function(layer) {
-    var props = layer.feature.properties
-    if(props.roomid === roomid) {
-      props.data = props.data.map(item => item.name == newItem.name ? newItem : item)
-      layer.setStyle(layer.options.style(layer.feature))
-      sidebar.updateSidebar(currentFloorid, props)
-    }
-  });
+  var feature = map.data.getFeatureById(roomid);
+  feature.setProperty('data', feature.getProperty('data').map(item => item.name == newItem.name ? newItem : item))
+  sidebar.updateSidebar(currentFloorid, feature.R);
 }
 
-socket.on('event', data => updateRoom(data.roomid, data.data))
+socket.on('event', data => updateRoom(data.roomid, data.data));

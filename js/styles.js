@@ -22,13 +22,13 @@ function redroom(feature) {
 
 function tempToColor(feature) {
   return {
-    color: getTempColor(feature),
-    stroke: 0
+    fillColor: getTempColor(feature),
+    strokeWeight: feature.getProperty('active') ? 1 : 0
   };
 }
 
 function getTempColor(feature) {
-  var elems = feature.properties.data.filter(function(elem) {
+  var elems = feature.getProperty('data').filter(function(elem) {
     return elem.name == "temperature";
   });
 
@@ -64,11 +64,11 @@ function utilToColor(feature) {
 }
 
 function getUtilColor(feature) {
-  var maxValues = feature.properties.data.filter(function(elem) {
+  var maxValues = feature.getProperty('data').filter(function(elem) {
     return elem.name == "maxutilization";
   });
 
-  var currentValues = feature.properties.data.filter(function(elem) {
+  var currentValues = feature.getProperty('data').filter(function(elem) {
     return elem.name == "currentutilization";
   });
 

@@ -7,6 +7,7 @@ var api       = require('./apiWrapper.js')
 
 var sidebarwrapper = document.querySelector('#sidebarwrapper')
 var currentId;
+var hidden = true;
 
 class SidebarComponent extends React.Component {
   constructor(props) {
@@ -42,12 +43,15 @@ class SidebarComponent extends React.Component {
   }
 
   handleClose() {
-    this.setState({visible: false})
+    document.getElementById("sidebar").className = "animate animateOut";
+    hidden = true;
+    this.setState({visible: false});
   }
 
   render() {
     var data = this.props.data;
-    return this.state.visible ? (
+
+    return (
       <div id='sidebar'>
         <span onClick={this.handleClose} className='glyphicon glyphicon-remove close'></span>
 
@@ -61,7 +65,7 @@ class SidebarComponent extends React.Component {
             {data.map((item, index) => (
               <div key={item.name} className="sidebar_subitem">
                 <span>{item.name}</span>
-                <span className="right">{item.value}</span>
+                <span className="right">{Math.round(item.value * 10)/10}</span>
               </div>
             ))}
           </div>
@@ -75,7 +79,7 @@ class SidebarComponent extends React.Component {
           </Loader>
         </div>
       </div>
-    ) : false
+    )
   }
 }
 
@@ -91,7 +95,7 @@ function renderSidebar(floorid, props) {
 }
 
 function updateSidebar(floorid, props) {
-  if(props.roomid == currentId) { 
+  if(props.roomid == currentId) {
     ReactDom.render(
       <SidebarComponent floorid={floorid}
                         roomid={props.roomid}
@@ -102,7 +106,22 @@ function updateSidebar(floorid, props) {
   }
 }
 
+function getRoomId() {
+  return currentId;
+}
+
+function getHidden() {
+  return hidden;
+}
+
+function setHidden(newHidden) {
+  hidden = newHidden;
+}
+
 module.exports = {
   renderSidebar,
-  updateSidebar
+  updateSidebar,
+  getRoomId,
+  getHidden,
+  setHidden
 }

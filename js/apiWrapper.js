@@ -16,6 +16,7 @@ function getHistory(floorid, roomid) {
   return getJson(apiUrl + '/floors/' + floorid + '/' + roomid + '/history')
 }
 
+
 module.exports = {
   baseUrl,
   getJson,
