@@ -1,15 +1,17 @@
 #topbar {
-  height: 10vh;
+  height: 60px;
   width: 100%;
   background-color: #50b649;
   position: fixed;
   top: 0;
-
+  z-index: 2;
+  overflow: auto;
 }
 
 #icon {
   height: 60px;
   width: 60px;
+  float: left;
 }
 
 #topbar-title {
@@ -17,7 +19,7 @@
   font-style: "Lato", Tahoma, Serif;
   color:  #f8f8f8;
   width: 300px;
-  left: 60px;
+  float: left;
 }
 
 #location {
@@ -28,19 +30,44 @@
   min-width: 500px;
   margin-left: 20%;
   margin-right: 20%;
+  text-align: center;
 }
 
 #data-view {
-  font-size: 40px;
-  font-style: "Lato", Tahoma, Serif;
-  color:  #f8f8f8;
-  width: 300px;
+  float: right;
 }
 
 #building-selector {
-
+  float: right;
 }
 
 #language {
+  float: right;
+}
 
+button {
+    background-color: #50b649;
+    border: none;
+    color: #f8f8f8;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 40px;
+    padding: 0 20px 0 20px;
+    margin: 0;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+li {
+    float: left;
+}
+
+li button:hover {
+    background-color: #111;
 }

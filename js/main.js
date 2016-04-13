@@ -19,7 +19,9 @@ GoogleMapsLoader.load(function(google) {
 
   map = new google.maps.Map(mapDiv, {
     center: {lat: 59.3465985, lng: 18.0737873},
-    zoom: 20
+    zoom: 20,
+    mapTypeControl: false,
+    streetViewControl: false
   });
 
   map.data.addListener('click', event => {

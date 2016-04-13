@@ -15,10 +15,47 @@ class TopbarComponent extends React.Component {
   render() {
     var data = this.props.data;
 
-      console.log(__dirname + "/../imgs/y-logo-small.png");
+    return (
+      <div>
+        <div id="icon">
+          <img src={__dirname + "/../imgs/y-logo-small.png"} className="resize" />
+        </div>
+
+        <div id="topbar-title">
+          Yanzi smart map
+        </div>
+        
+        <div id="language">
+          <button>
+            &#9873;
+          </button>
+        </div>
+        
+        <div id="building-selector">
+          <button>
+            &#9281;
+          </button>
+        </div>
+        
+        <div id="data-view">
+          <button>
+            &#8962;
+          </button>
+        </div>
+        
+        <div id="location">
+          {getBuildingString()}
+        </div>
+      </div>
+    )
+  }
+
+  /*render() {
+    var data = this.props.data;
 
     return (
       <div id="topbar">
+      
         <span id="icon">
             <img src={__dirname + "/../imgs/y-logo-small.png"} className="resize" />
         </span>
@@ -32,15 +69,25 @@ class TopbarComponent extends React.Component {
         </span>
 
         <span id="data-view">
-          &#8962;
+          <button>
+            &#8962;
+          </button>
         </span>
 
-        <span id="building-selector"></span>
+        <span id="building-selector">
+          <button>
+            &#9281;
+          </button>
+        </span>
 
-        <span id="language"></span>
+        <span id="language">
+          <button>
+            &#9873;
+          </button>
+        </span>
       </div>
     )
-  }
+  }*/
 
 }
 
