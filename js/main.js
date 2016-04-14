@@ -11,6 +11,7 @@ var currentFloor,
     currentFloorid;
 var socket            = io(api.baseUrl);
 
+
 /**
   * Load the map into the div with id 'map'
   */
