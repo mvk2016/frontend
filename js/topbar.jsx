@@ -1,6 +1,6 @@
-var React       = require('react');
-var ReactDom    = require('react-dom');
-var topbar      = document.querySelector('#topbar');
+var React    = require('react');
+var ReactDom = require('react-dom');
+var styles   = require('./styles.js');
 
 
 class TopbarComponent extends React.Component {
@@ -8,8 +8,25 @@ class TopbarComponent extends React.Component {
     super(props)
     this.state = {
       visible: true,
-      loaded: true
+      loaded: true,
+      context: styles.tempToColor
     }
+
+    this.switchStyle = this.switchStyle.bind(this)
+  }
+
+  switchStyle() {
+    if(this.state.context == styles.tempToColor)
+      var context = styles.utilToColor;
+    else
+      var context = styles.tempToColor;
+    this.setState({context: context});
+    this.props.setStyle(context);
+  }
+
+  getBuildingString() {
+    //TODO: fix this! 10/10 will remember
+    return "KTH Campus"
   }
 
   render() {
@@ -38,68 +55,23 @@ class TopbarComponent extends React.Component {
         </div>
         
         <div id="data-view">
-          <button>
+          <button onClick={this.switchStyle} >
             &#8962;
           </button>
         </div>
         
         <div id="location">
-          {getBuildingString()}
+          {this.getBuildingString()}
         </div>
       </div>
     )
   }
-
-  /*render() {
-    var data = this.props.data;
-
-    return (
-      <div id="topbar">
-      
-        <span id="icon">
-            <img src={__dirname + "/../imgs/y-logo-small.png"} className="resize" />
-        </span>
-
-        <span id="topbar-title">
-          Yanzi smart map
-        </span>
-
-        <span id="location">
-          {getBuildingString()}
-        </span>
-
-        <span id="data-view">
-          <button>
-            &#8962;
-          </button>
-        </span>
-
-        <span id="building-selector">
-          <button>
-            &#9281;
-          </button>
-        </span>
-
-        <span id="language">
-          <button>
-            &#9873;
-          </button>
-        </span>
-      </div>
-    )
-  }*/
-
 }
 
-function getBuildingString() {
-  //TODO: fix this! 10/10 will remember
-  return "KTH Campus"
-}
-
-function renderTopbar() {
+function renderTopbar(setStyle) {
   ReactDom.render(
-    <TopbarComponent  />,
-    topbar
+    <TopbarComponent setStyle={setStyle} />,
+    document.querySelector('#topbar')
   );
 }
 

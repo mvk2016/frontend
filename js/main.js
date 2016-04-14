@@ -50,7 +50,7 @@ GoogleMapsLoader.load(function(google) {
 
   setFloor('testfloor');
 
-  topbar.renderTopbar();
+  topbar.renderTopbar(x => map.data.setStyle(x));
 })
 
 /**
@@ -66,7 +66,7 @@ function addRooms(json) {
 
   currentFloor = map.data.addGeoJson(json, {idPropertyName: 'roomid'});
 
-  map.fitBounds(getBounds(currentFloor))
+  //map.fitBounds(getBounds(currentFloor))
 }
 
 function getBounds(features) {

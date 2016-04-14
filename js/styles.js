@@ -94,16 +94,16 @@ function getUtilColor(feature) {
 
   var res = current/max;
 
-  return  d < 0.1    ? '#00FF00' :
-          d < 0.2    ? '#33FF00' :
-          d < 0.3    ? '#66FF00' :
-          d < 0.4    ? '#99FF00' :
-          d < 0.5    ? '#CCFF00' :
-          d < 0.6    ? '#FFFF00' :
-          d < 0.7    ? '#FFCC00' :
-          d < 0.8    ? '#FF9900' :
-          d < 0.9    ? '#FF6600' :
-                       '#FF3300' ;
+  return res < 0.1    ? '#00FF00' :
+         res < 0.2    ? '#33FF00' :
+         res < 0.3    ? '#66FF00' :
+         res < 0.4    ? '#99FF00' :
+         res < 0.5    ? '#CCFF00' :
+         res < 0.6    ? '#FFFF00' :
+         res < 0.7    ? '#FFCC00' :
+         res < 0.8    ? '#FF9900' :
+         res < 0.9    ? '#FF6600' :
+                        '#FF3300' ;
 }
 
 module.exports = {
