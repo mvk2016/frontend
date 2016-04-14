@@ -29,13 +29,17 @@ class TopbarComponent extends React.Component {
     return "KTH Campus"
   }
 
+  handleButtonClick(e) {
+    alert(e.target)
+  }
+
   render() {
     var data = this.props.data;
 
     return (
       <div>
         <div id="icon">
-          <img src={__dirname + "/../imgs/y-logo-small.png"} className="resize" />
+          <img src={"http://localhost:8000/imgs/y-logo-small.png"} className="resize" />
         </div>
 
         <div id="topbar-title">
@@ -43,7 +47,7 @@ class TopbarComponent extends React.Component {
         </div>
         
         <div id="language">
-          <button>
+          <button onClick={this.handleButtonClick}>
             &#9873;
           </button>
         </div>
