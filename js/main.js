@@ -19,7 +19,7 @@ GoogleMapsLoader.load(function(google) {
   var mapDiv = document.getElementById('map');
 
   map = new google.maps.Map(mapDiv, {
-    center: {lat: 59.3465985, lng: 18.0737873},
+    center: {lat: 59.34669, lng: 18.07372},
     zoom: 20,
     mapTypeControl: false,
     streetViewControl: false

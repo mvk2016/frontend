@@ -15,22 +15,32 @@ class TopbarComponent extends React.Component {
     this.switchStyle = this.switchStyle.bind(this)
   }
 
-  switchStyle() {
+  switchStyle(mode) {
+    console.log(mode);
+    if (mode == "temperature") {
+      var context = styles.tempToColor;
+      document.getElementById("temperature-view").className = "active-view";
+      document.getElementById("utilization-view").className = "";
+    } else if (mode == "utilization") {
+      var context = styles.utilToColor;
+      document.getElementById("utilization-view").className = "active-view";
+      document.getElementById("temperature-view").className = "";
+    }
+    this.setState({context: context});
+    this.props.setStyle(context);
+    /*
     if(this.state.context == styles.tempToColor)
       var context = styles.utilToColor;
     else
       var context = styles.tempToColor;
     this.setState({context: context});
     this.props.setStyle(context);
+    */
   }
 
   getBuildingString() {
     //TODO: fix this! 10/10 will remember
-    return "KTH Campus"
-  }
-
-  handleButtonClick(e) {
-    alert(e.target)
+    return "KTH Campus";
   }
 
   render() {
@@ -46,21 +56,21 @@ class TopbarComponent extends React.Component {
           Yanzi smart map
         </div>
         
-        <div id="language">
-          <button onClick={this.handleButtonClick}>
+        <div id="controller">
+          <button id="language">
             &#9873;
           </button>
         </div>
         
-        <div id="building-selector">
-          <button>
+        <div id="controller">
+          <button id="utilization-view" onClick={this.switchStyle.bind(this, "utilization")} >
             &#9281;
           </button>
         </div>
         
-        <div id="data-view">
-          <button onClick={this.switchStyle} >
-            &#8962;
+        <div id="controller">
+          <button id="temperature-view" className="active-view" onClick={this.switchStyle.bind(this, "temperature")} >
+            &#8451;
           </button>
         </div>
         
