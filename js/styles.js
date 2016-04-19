@@ -58,8 +58,8 @@ function getTempColor(feature) {
 
 function utilToColor(feature) {
   return {
-    color: getUtilColor(feature),
-    stroke: 0
+    fillColor: getUtilColor(feature),
+    strokeWeight: feature.getProperty('active') ? 1 : 0
   };
 }
 

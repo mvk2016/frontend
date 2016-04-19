@@ -16,7 +16,6 @@ class TopbarComponent extends React.Component {
   }
 
   switchStyle(mode) {
-    console.log(mode);
     if (mode == "temperature") {
       var context = styles.tempToColor;
       document.getElementById("temperature-view").className = "active-view";
