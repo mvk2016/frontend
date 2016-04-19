@@ -10,7 +10,7 @@ var map;
 var currentFloor,
     currentFloorid;
 var socket            = io(api.baseUrl);
-
+var floorList = [00, 01, 02, 03, 04, 05];
 
 /**
   * Load the map into the div with id 'map'
@@ -24,6 +24,12 @@ GoogleMapsLoader.load(function(google) {
     mapTypeControl: false,
     streetViewControl: false
   });
+
+  var floorSelectorDiv = document.getElementById('floorselector');
+  var floorSelector = new floorSelector(floorSelectorDiv, map);
+
+  floorSelectorDiv.index = 1;
+  map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(floorSelectorDiv);
 
   map.data.addListener('click', event => {
     var currentRoomId = sidebar.getRoomId();
@@ -49,9 +55,11 @@ GoogleMapsLoader.load(function(google) {
 
   map.data.setStyle(styles.tempToColor);
 
-  setFloor('testfloor');
-
   topbar.renderTopbar(x => map.data.setStyle(x));
+
+
+
+  setFloor('testfloor');
 })
 
 /**
@@ -81,5 +89,19 @@ function updateRoom(roomid, newItem) {
   feature.setProperty('data', feature.getProperty('data').map(item => item.name == newItem.name ? newItem : item))
   sidebar.updateSidebar(currentFloorid, feature.R);
 }
+
+function floorSelector(selectorDiv, map) {
+  var selectorUI = document.createElement('div');
+  selectorUI.className='floor-switch-container';
+  selectorDiv.appendChild(selectorUI);
+
+  var selectorText = document.createElement('div');
+  selectorText.className='floor-switch-item';
+  selectorUI.appendChild(selectorText);
+
+  controlUI.addEventListener('click', function(){
+
+  })
+};
 
 socket.on('event', data => updateRoom(data.roomid, data.data));
