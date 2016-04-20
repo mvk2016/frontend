@@ -27,14 +27,6 @@ class TopbarComponent extends React.Component {
     }
     this.setState({context: context});
     this.props.setStyle(context);
-    /*
-    if(this.state.context == styles.tempToColor)
-      var context = styles.utilToColor;
-    else
-      var context = styles.tempToColor;
-    this.setState({context: context});
-    this.props.setStyle(context);
-    */
   }
 
   getBuildingString() {
