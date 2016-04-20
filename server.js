@@ -5,7 +5,7 @@ const browserify  = require('browserify-middleware');
 const app = express();
 
 app.use('/style', expressLess(__dirname + '/less'));
-app.get('/js/bundle.js', browserify(__dirname + '/js/main.js'));
+app.get('/js/bundle.js', browserify(__dirname + '/js/main.jsx'));
 
 /**
  * Serves static files from the root directory.

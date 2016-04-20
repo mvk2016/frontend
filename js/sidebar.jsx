@@ -3,17 +3,13 @@ var ReactDom  = require('react-dom')
 var LineChart = require('react-chartjs').Line
 var Loader    = require('react-loader')
 
-var api       = require('./apiWrapper.js')
+var api       = require('./api.js')
 
-var sidebarwrapper = document.querySelector('#sidebarwrapper')
-var currentId;
-var hidden = true;
-
-class SidebarComponent extends React.Component {
+class Sidebar extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      visible: true,
+      visible: false,
       history: {labels: [], datasets: []},
       loaded: false
     }
@@ -27,47 +23,46 @@ class SidebarComponent extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    if(this.props.roomid === props.roomid && this.props.data === props.data) {
+    if(props.roomid && this.props.roomid === props.roomid && this.props.data === props.data) {
       this.setState({visible: !this.state.visible})
     }
     else if(this.props.roomid !== props.roomid) {
+      this.setState({visible: true})
       this.getHistory(props.roomid)
     }
   }
 
   getHistory(roomid) {
     this.setState({loaded: false})
-    api.getHistory(this.props.floorid, roomid).then(json => {
+    api.getHistory(roomid).then(json => {
       this.setState({history: json, loaded: true})
     })
   }
 
   handleClose() {
-    document.getElementById("sidebar").className = "animate animateOut";
-    hidden = true;
     this.setState({visible: false});
   }
 
   render() {
     var data = this.props.data;
-
+    var animationClass = this.state.visible ? 'animate animateIn' : 'animate animateOut';
     return (
-      <div id='sidebar'>
+      <div id='sidebar' className={animationClass}>
         <span onClick={this.handleClose} className='glyphicon glyphicon-remove close'></span>
 
-        <h1>{this.props.roomname}</h1>
+        <h1>{this.props.name}</h1>
 
-        <div id='data' className="sidebar_item">
+        <div className="sidebar_item">
           <div className="sidebar_item_head">
             <h2>Data</h2>
           </div>
-          <div className="sidebar_subitem_contaier">
-            {data.map((item, index) => (
-              <div key={item.name} className="sidebar_subitem">
+          <div className="sidebar_item_list">
+            {data ? data.map(item => (
+              <div key={item.name}>
                 <span>{item.name}</span>
-                <span className="right">{Math.round(item.value * 10)/10}</span>
+                <span style={{float: "right"}}>{Math.round(item.value * 10)/10}</span>
               </div>
-            ))}
+            )) : false }
           </div>
         </div>
         <div className="sidebar_item">
@@ -83,45 +78,4 @@ class SidebarComponent extends React.Component {
   }
 }
 
-function renderSidebar(floorid, props) {
-  ReactDom.render(
-    <SidebarComponent floorid={floorid}
-                      roomid={props.roomid}
-                      roomname={props.name}
-                      data={props.data} />,
-    sidebarwrapper
-  )
-  currentId = props.roomid
-}
-
-function updateSidebar(floorid, props) {
-  if(props.roomid == currentId) {
-    ReactDom.render(
-      <SidebarComponent floorid={floorid}
-                        roomid={props.roomid}
-                        roomname={props.name}
-                        data={props.data} />,
-      sidebarwrapper
-    )
-  }
-}
-
-function getRoomId() {
-  return currentId;
-}
-
-function getHidden() {
-  return hidden;
-}
-
-function setHidden(newHidden) {
-  hidden = newHidden;
-}
-
-module.exports = {
-  renderSidebar,
-  updateSidebar,
-  getRoomId,
-  getHidden,
-  setHidden
-}
+module.exports = Sidebar

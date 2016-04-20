@@ -2,8 +2,7 @@ var React    = require('react');
 var ReactDom = require('react-dom');
 var styles   = require('./styles.js');
 
-
-class TopbarComponent extends React.Component {
+class Topbar extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -12,21 +11,19 @@ class TopbarComponent extends React.Component {
       context: styles.tempToColor
     }
 
-    this.switchStyle = this.switchStyle.bind(this)
+    this.setStyle = this.setStyle.bind(this)
+    this.isActive = this.isActive.bind(this)
   }
 
-  switchStyle(mode) {
-    if (mode == "temperature") {
-      var context = styles.tempToColor;
-      document.getElementById("temperature-view").className = "active-view";
-      document.getElementById("utilization-view").className = "";
-    } else if (mode == "utilization") {
-      var context = styles.utilToColor;
-      document.getElementById("utilization-view").className = "active-view";
-      document.getElementById("temperature-view").className = "";
+  setStyle(context) {
+    return event => {
+      this.setState({context: context});
+      this.props.setStyle(context);
     }
-    this.setState({context: context});
-    this.props.setStyle(context);
+  }
+
+  isActive(context) {
+    return this.state.context === context ? 'active-view': '';
   }
 
   getBuildingString() {
@@ -38,7 +35,7 @@ class TopbarComponent extends React.Component {
     var data = this.props.data;
 
     return (
-      <div>
+      <div id="topbar">
         <div id="icon">
           <img src={"http://localhost:8000/imgs/y-logo-small.png"} className="resize" />
         </div>
@@ -47,24 +44,21 @@ class TopbarComponent extends React.Component {
           Yanzi smart map
         </div>
         
-        <div id="controller">
-          <button id="language">
-            &#9873;
-          </button>
-        </div>
-        
-        <div id="controller">
-          <button id="utilization-view" onClick={this.switchStyle.bind(this, "utilization")} >
+        <div onClick={this.setStyle(styles.utilToColor)}
+            className={"controller " + this.isActive(styles.utilToColor)}>
             &#9281;
-          </button>
         </div>
         
-        <div id="controller">
-          <button id="temperature-view" className="active-view" onClick={this.switchStyle.bind(this, "temperature")} >
+        <div onClick={this.setStyle(styles.tempToColor)}
+             className={"controller " + this.isActive(styles.tempToColor)}>
             &#8451;
-          </button>
         </div>
-        
+
+        <div onClick={this.setStyle(styles.humidityToColor)}
+             className={"controller " + this.isActive(styles.humdToColor)}>
+           &#128167; 
+        </div>
+
         <div id="location">
           {this.getBuildingString()}
         </div>
@@ -73,13 +67,4 @@ class TopbarComponent extends React.Component {
   }
 }
 
-function renderTopbar(setStyle) {
-  ReactDom.render(
-    <TopbarComponent setStyle={setStyle} />,
-    document.querySelector('#topbar')
-  );
-}
-
-module.exports = {
-  renderTopbar
-}
+module.exports = Topbar

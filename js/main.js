@@ -15,11 +15,10 @@ var socket            = io(api.baseUrl);
 
 
 /**
-  * Load the map into the div with id 'map'
-  */
+* Load the map into the div with id 'map'
+*/
 GoogleMapsLoader.load(function(google) {
   var mapDiv = document.getElementById('map');
-
   map = new google.maps.Map(mapDiv, {
     center: {lat: 59.34669, lng: 18.07372},
     zoom: 20,
@@ -28,17 +27,8 @@ GoogleMapsLoader.load(function(google) {
   });
 
   map.data.addListener('click', event => {
-    var currentRoomId = sidebar.getRoomId();
     sidebar.renderSidebar(currentFloorid, event.feature.R);
     event.feature.setProperty('active', true);
-
-    /*Animate stuff if conditions are met*/
-    if (currentRoomId === event.feature.R.roomid || currentRoomId == undefined || (currentRoomId != event.feature.R.roomid && sidebar.getHidden())) {
-      var hidden = sidebar.getHidden();
-      var animation = hidden ? "animate animateIn" : "animate animateOut";
-      sidebar.setHidden(!hidden);
-      document.getElementById("sidebar").className = animation;
-    }
   })
 
   map.data.addListener('mouseover', event => {
@@ -56,6 +46,7 @@ GoogleMapsLoader.load(function(google) {
   topbar.renderTopbar(x => map.data.setStyle(x));
   floorswitch.renderFloorSwitch(allFloors, currentFloorid);
 })
+
 
 /**
  * Fetch floor data and draw the floor
