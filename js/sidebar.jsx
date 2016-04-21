@@ -74,9 +74,19 @@ class SidebarComponent extends React.Component {
           <div className="sidebar_item_head">
             <h2>Chart</h2>
           </div>
-          <Loader loaded={this.state.loaded}>
-            <LineChart data={this.state.history} />
-          </Loader>
+          <div className="sidebar_subitem_contaier">
+            <div className="calender-wrapper sidebar_subitem">
+              <div className="calender-interval"  >From: </div>
+              <input className="calender-picker" type="date" data-date-inline-picker="true" data-date-popover='{"inline": true}' />
+            </div>
+            <div className="calender-wrapper sidebar_subitem">
+              <div className="calender-interval" >To: </div>
+              <input className="calender-picker" type="date" data-date-inline-picker="true" data-date-popover='{"inline": true}' placeholder="" />
+            </div>
+            <Loader loaded={this.state.loaded}>
+              <LineChart data={this.state.history} />
+            </Loader>
+          </div>
         </div>
       </div>
     )
