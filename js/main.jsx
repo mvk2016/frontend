@@ -1,105 +1,127 @@
-var React    = require('react');
-var ReactDom = require('react-dom');
+var React    = require('react')
+var ReactDom = require('react-dom')
 
-var api = require('./api.js');
-
-var TopBar       = require('./topbar.jsx');
-var SideBar      = require('./sidebar.jsx');
-var Floorswitch  = require('./floorswitch.jsx');
+var api          = require('./api.js')
+var Topbar       = require('./topbar.jsx')
+var Sidebar      = require('./sidebar.jsx')
+var Floorswitch  = require('./floorswitch.jsx')
 
 class Main extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentBuildingId: 0,
-      floors: ['testfloor'],
-      currentFloorId: 'testfloor',
-      sidebarProps: null,
-      map: null
+      buildings: []
+      buildingId: 0,
+      buildingName: '',
+      floors: [],
+      floor: false,
+      sidebarProps: {data: []},
+      map: false
     }
     
-    this.loadBuilding = this.loadBuilding.bind(this);
-    this.loadMap      = this.loadMap.bind(this);
-    this.setFloor     = this.setFloor.bind(this);
-    this.updateRoom   = this.updateRoom.bind(this);
+    this.loadMap      = this.loadMap.bind(this)
+    this.getBuilding  = this.getBuilding.bind(this)
+    this.getFloors    = this.getFloors.bind(this)
+    this.setFloor     = this.setFloor.bind(this)
+    this.updateRoom   = this.updateRoom.bind(this)
 
     this.loadMap({
       center: {lat:59.34669, lng: 18.07372},
       zoom: 20,
       mapTypeControl: false,
       streetViewControl: false
-    });
+    })
 
-    api.addWebSocket(this.updateRoom);
-  }
-
-  loadBuilding(buildingid) {
-    api.getFloors(buildingid).then(floors => {
-      this.setState({
-        currentBuildingId: buildingid,
-        floors: floors
-      });
-      if(floors.length > 0)
-        this.setFloor(floors[0]);
-    });
+    api.addWebSocket(this.updateRoom)
   }
 
   loadMap(options) {
     require('google-maps').load(google => {
-      var map = new google.maps.Map(document.getElementById('map'), options);
+      var map = new google.maps.Map(document.getElementById('map'), options)
       
       map.data.addListener('click', 
-        e => this.setState({sidebarProps: e.feature.R}));
+        e => this.setState({sidebarProps: e.feature.R}))
       
       map.data.addListener('mouseover', 
-        e => e.feature.setProperty('active', true));
+        e => e.feature.setProperty('active', true))
       
       map.data.addListener('mouseout',
-        e => e.feature.setProperty('active', false));
-      
-      this.setState({map: map});
-      this.loadBuilding(this.state.currentBuildingId);
+        e => e.feature.setProperty('active', false))
+     
+      this.setState({map})
+      this.getBuilding()
     })
   }
 
-  setFloor(floorid) {
-    var currentFloor = this.state.currentFloor;
-    var map = this.state.map;
-    api.getFloor(floorid).then(json => {
-      map.data.forEach(feature => map.data.remove)
+  getBuilding(id) {
+    api.getBuildings().then(({buildings}) => {
+      var filtered = buildings.filter(b => b.id === id)
+      var building
+      if(filtered.length === 1)
+        building = filtered[0]
+      else if(buildings.length > 0)
+        building = buildings[0]
+      else
+        throw 'No building found'
+
       this.setState({
-        currentFloorId: floorid,
-        currentFloor: map.data.addGeoJson(json, {idPropertyName: 'roomid'})
-      });
-      //map.fitBounds(getBounds(json)); //TODO: implement getBounds
-    });
+        buildings: buildings,
+        buildingId: building.id,
+        buildingName: building.name
+      })
+      this.getFloors(building.id)
+    })
+  }
+
+  getFloors(buildingid) {
+    api.getFloors(buildingid).then(({floors}) => {
+      this.setState({floors})
+      //set current floor to first floor
+      if(floors.length > 0) this.setFloor(floors[0])
+    })
+  }
+
+  setFloor(floor) {
+    var {map} = this.state
+    api.getFloor(this.state.currentBuildingId, floor).then(json => {
+      //remove old features and add new
+      map.data.forEach(feature => map.data.remove)
+      map.data.addGeoJson(json, {idPropertyName: 'roomid'})
+      this.setState({floor})
+      //map.fitBounds(getBounds(json)) //TODO: implement getBounds
+    })
   }
 
   updateRoom(json) {
-    var feature = this.state.map.getFeatureById(json.roomid);
-    var oldData = feature.getProperty('data');
-    var newData = oldData.map(item => item.name === json.name ? json : item);
-    feature.setProperty('data', newData);
-    if(json.roomid === sidebarProps.roomid) {
-      this.setState({
-        sidebarProps: Object.assign({}, sidebarProps, {data: newData})
-      })
-    }
+    var feature = this.state.map.getFeatureById(json.roomid)
+
+    //switch corresponding data item in room
+    var data = feature.getProperty('data')
+                      .map(item => item.name === json.name ? json : item)
+    feature.setProperty('data', data)
+
+    //room is shown in sidebar, also update sidebar
+    if(json.roomid === sidebarProps.roomid)
+      this.setState({sidebarProps: Object.assign({}, sidebarProps, {data})})
   }
 
   render() {
     return (
       <div>
-        <TopBar setStyle={x => this.state.map.data.setStyle(x)} />
+        <Topbar buildingName={this.state.buildingName}
+                buildings={this.state.buildings}
+                setBuilding={this.setBuilding}
+                setStyle={x => this.state.map.data.setStyle(x)} />
 
-        <SideBar {...this.state.sidebarProps} />
+        <Sidebar {...this.state.sidebarProps} />
         
         <Floorswitch floors={this.state.floors}
-                     currentFloor={this.state.currentFloorId}
+                     floor={this.state.floor}
                      onFloorChange={this.setFloor} />
       </div>
     )
   }
 }
 
-ReactDom.render(<Main />, document.getElementById('container'));
+ReactDom.render(<Main />, document.getElementById('container'))
+

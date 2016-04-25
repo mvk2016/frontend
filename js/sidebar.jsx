@@ -23,7 +23,9 @@ class Sidebar extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    if(props.roomid && this.props.roomid === props.roomid && this.props.data === props.data) {
+    if (props.roomid &&
+        this.props.roomid === props.roomid &&
+        this.props.data === props.data) {
       this.setState({visible: !this.state.visible})
     }
     else if(this.props.roomid !== props.roomid) {
@@ -44,29 +46,34 @@ class Sidebar extends React.Component {
   }
 
   render() {
-    var data = this.props.data;
-    var animationClass = this.state.visible ? 'animate animateIn' : 'animate animateOut';
+    var data = this.props.data
+    var animation = this.state.visible ? 'animate-in' : 'animate-out'
     return (
-      <div id='sidebar' className={animationClass}>
-        <span onClick={this.handleClose} className='glyphicon glyphicon-remove close'></span>
+      <div id='sidebar' className={'animate ' + animation}>
+        <span onClick={this.handleClose} 
+              className='glyphicon glyphicon-remove close'></span>
 
         <h1>{this.props.name}</h1>
 
-        <div className="sidebar_item">
-          <div className="sidebar_item_head">
+        <div className='sidebar-item'>
+          <div className='sidebar-item-head'>
             <h2>Data</h2>
           </div>
-          <div className="sidebar_item_list">
-            {data ? data.map(item => (
-              <div key={item.name}>
-                <span>{item.name}</span>
-                <span style={{float: "right"}}>{Math.round(item.value * 10)/10}</span>
-              </div>
-            )) : false }
+          <div className='sidebar-item-list'>
+            {
+              data.map(item => (
+                <div key={item.name}>
+                  <span>{item.name}</span>
+                  <span className='data-item'>
+                    {Math.round(item.value * 10)/10}
+                  </span>
+                </div>
+              ))
+            }
           </div>
         </div>
-        <div className="sidebar_item">
-          <div className="sidebar_item_head">
+        <div className='sidebar-item'>
+          <div className='sidebar-item-head'>
             <h2>Chart</h2>
           </div>
           <Loader loaded={this.state.loaded}>

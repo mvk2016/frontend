@@ -1,66 +1,70 @@
-var React    = require('react');
-var ReactDom = require('react-dom');
-var styles   = require('./styles.js');
+var React    = require('react')
+var ReactDom = require('react-dom')
+
+var api      = require('./api.js')
+var styles   = require('./styles.js')
 
 class Topbar extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      visible: true,
-      loaded: true,
       context: styles.tempToColor
     }
 
     this.setStyle = this.setStyle.bind(this)
-    this.isActive = this.isActive.bind(this)
+
+    this.handleBuildingChange = this.handleBuildingChange.bind(this)
   }
 
   setStyle(context) {
     return event => {
-      this.setState({context: context});
-      this.props.setStyle(context);
+      this.setState({context})
+      this.props.setStyle(context)
     }
   }
 
-  isActive(context) {
-    return this.state.context === context ? 'active-view': '';
-  }
-
-  getBuildingString() {
-    //TODO: fix this! 10/10 will remember
-    return "KTH Campus";
+  handleBuildingChange() {
+    var {buildings, buildingName} = this.state
+    //find index of next building in list
+    var index = buildings.map(b => b.name === buildingName).indexOf(true) + 1
+    //if that index exists use its id, else use 0
+    var id = buildings[index] ? buildings[index].id : buildings[0].id
+    this.props.setBuilding(id)
   }
 
   render() {
-    var data = this.props.data;
+    var {data} = this.props
+    var {tempToColor, utilToColor, humdToColor} = styles
+
+    var isActive = c => this.state.context === c ? 'active-view': ''
 
     return (
-      <div id="topbar">
-        <div id="icon">
-          <img src={"http://localhost:8000/imgs/y-logo-small.png"} className="resize" />
+      <div id='topbar'>
+        <div id='icon'>
+          <img src={'imgs/y-logo-small.png'} className='resize' />
         </div>
 
-        <div id="topbar-title">
+        <div id='topbar-title'>
           Yanzi smart map
         </div>
         
-        <div onClick={this.setStyle(styles.utilToColor)}
-            className={"controller " + this.isActive(styles.utilToColor)}>
-            &#9281;
+        <div onClick={this.setStyle(utilToColor)}
+             className={'controller ' + isActive(utilToColor)}>
+            &#9281
         </div>
         
-        <div onClick={this.setStyle(styles.tempToColor)}
-             className={"controller " + this.isActive(styles.tempToColor)}>
-            &#8451;
+        <div onClick={this.setStyle(tempToColor)}
+             className={'controller ' + isActive(tempToColor)}>
+            &#8451
         </div>
 
-        <div onClick={this.setStyle(styles.humidityToColor)}
-             className={"controller " + this.isActive(styles.humdToColor)}>
-           &#128167; 
+        <div onClick={this.setStyle(humdToColor)}
+             className={'controller ' + isActive(humdToColor)}>
+           &#128167
         </div>
 
-        <div id="location">
-          {this.getBuildingString()}
+        <div id='location' onClick={this.handleBuildingChange}>
+          {this.props.buildingName}
         </div>
       </div>
     )
