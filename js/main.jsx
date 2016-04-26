@@ -1,12 +1,12 @@
 var React    = require('react')
 var ReactDom = require('react-dom')
 
-var Topbar       = require('./topbar.jsx')
-var Sidebar      = require('./sidebar.jsx')
-var Floorswitch  = require('./floorswitch.jsx')
+var Topbar      = require('./topbar.jsx')
+var Sidebar     = require('./sidebar.jsx')
+var Floorswitch = require('./floorswitch.jsx')
 
-var api          = require('./api.js')
-var styles       = require('./styles.js')
+var api         = require('./api.js')
+var styles      = require('./styles.js')
 
 class Main extends React.Component {
   constructor(props) {
@@ -96,18 +96,25 @@ class Main extends React.Component {
     api.getFloor(this.state.buildingId, floor).then(json => {
       //remove old features and add new
       map.data.forEach(feature => map.data.remove)
-      map.data.addGeoJson(json, {idPropertyName: 'roomid'})
+      map.data.addGeoJson(json, {idPropertyName: 'roomId'})
       this.setState({floor})
       //map.fitBounds(getBounds(json)) //TODO: implement getBounds
     })
   }
 
   updateRoom(json) {
-    var feature = this.state.map.getFeatureById(json.roomid)
+    var feature = this.state.map.getFeatureById(json.roomId)
 
-    //switch corresponding data item in room
+    //remove old data item
     var data = feature.getProperty('data')
-                      .map(item => item.name === json.name ? json : item)
+                      .filter(i => i.type !== json.type)
+    //add new data item
+    data.push({
+      roomId: json.roomId,
+      type: json.type,
+      value: json.value,
+      collected: json.ceollected
+    })
     feature.setProperty('data', data)
 
     //room is shown in sidebar, also update sidebar
