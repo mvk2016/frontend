@@ -17,6 +17,10 @@
   }
 }
 
+.sidebar-close {
+  cursor: pointer;
+}
+
 .sidebar-item {
   border: solid;
   border-width: 1px;
@@ -57,6 +61,21 @@
     span {
       font-size: 12pt;
       color: #8e8e8e;
+    }
+
+    &:last-child {
+      border: 0;
+    }
+  }
+}
+
+.sidebar-range-select {
+  a {
+    text-decoration: none;
+    border-right: 1px solid #aaa;
+
+    &:hover {
+      text-decoration: underline;
     }
 
     &:last-child {

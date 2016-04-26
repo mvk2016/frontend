@@ -1,10 +1,12 @@
 var React    = require('react')
 var ReactDom = require('react-dom')
 
-var api          = require('./api.js')
 var Topbar       = require('./topbar.jsx')
 var Sidebar      = require('./sidebar.jsx')
 var Floorswitch  = require('./floorswitch.jsx')
+
+var api          = require('./api.js')
+var styles       = require('./styles.js')
 
 class Main extends React.Component {
   constructor(props) {
@@ -16,14 +18,16 @@ class Main extends React.Component {
       floors: [],
       floor: false,
       sidebarProps: {data: []},
+      mapContext: 'temperature',
       map: false
     }
     
-    this.loadMap      = this.loadMap.bind(this)
-    this.getBuilding  = this.getBuilding.bind(this)
-    this.getFloors    = this.getFloors.bind(this)
-    this.setFloor     = this.setFloor.bind(this)
-    this.updateRoom   = this.updateRoom.bind(this)
+    this.loadMap       = this.loadMap.bind(this)
+    this.setMapContext = this.setMapContext.bind(this)
+    this.getBuilding   = this.getBuilding.bind(this)
+    this.getFloors     = this.getFloors.bind(this)
+    this.setFloor      = this.setFloor.bind(this)
+    this.updateRoom    = this.updateRoom.bind(this)
 
     this.loadMap({
       center: {lat:59.34669, lng: 18.07372},
@@ -47,10 +51,17 @@ class Main extends React.Component {
       
       map.data.addListener('mouseout',
         e => e.feature.setProperty('active', false))
-     
+
+      this.setMapContext(this.state.mapContext)
       this.setState({map})
       this.getBuilding()
     })
+  }
+
+  setMapContext(mapContext) {
+    this.setState({mapContext})
+    var context = styles[mapContext]
+    this.state.map.setStyle(context || styles.grey)
   }
 
   getBuilding(id) {
@@ -111,9 +122,10 @@ class Main extends React.Component {
         <Topbar buildingName={this.state.buildingName}
                 buildings={this.state.buildings}
                 setBuilding={this.setBuilding}
-                setStyle={x => this.state.map.data.setStyle(x)} />
+                setMapContext={this.setMapContext} />
 
-        <Sidebar {...this.state.sidebarProps} />
+        <Sidebar {...this.state.sidebarProps}
+                 mapContext={this.state.mapContext}/>
         
         <Floorswitch floors={this.state.floors}
                      floor={this.state.floor}

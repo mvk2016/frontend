@@ -23,8 +23,10 @@ function getFloor(buildingid, floor) {
   return getJson(`/buildings/${buildingid}/floors/${floor}`)
 }
 
-function getHistory(roomid) {
-  return getJson(`/rooms/${roomid}/history`)
+function getHistory(roomid, type, startDate, endDate) {
+  var url = `/history/${roomid}/${type}?start=${startDate}`
+  if(endDate) url += `&end=${endDate}`
+  return getJson(url)
 }
 
 function addWebSocket(onmessage) {
