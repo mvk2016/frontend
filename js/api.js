@@ -1,4 +1,4 @@
-var baseUrl = 'localhost:8001'
+var baseUrl = 'api20160426022719.azurewebsites.net'
 var apiUrl  = 'http://' + baseUrl + '/api'
 
 /**
@@ -7,7 +7,7 @@ var apiUrl  = 'http://' + baseUrl + '/api'
 function getJson(url) {
   return fetch(apiUrl + url).then(response => {
     if (!response.ok) throw response.status
-    response.json()
+    return response.json()
   })
 }
 
@@ -16,7 +16,7 @@ function getBuildings() {
 }
 
 function getFloors(buildingid) {
-  return getJson(`/buildings/${buildingid}/floors`)
+  return getJson(`/buildings/${buildingid}`)
 }
 
 function getFloor(buildingid, floor) {

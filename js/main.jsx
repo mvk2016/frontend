@@ -12,7 +12,7 @@ class Main extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      buildings: []
+      buildings: [],
       buildingId: 0,
       buildingName: '',
       floors: [],
@@ -52,16 +52,15 @@ class Main extends React.Component {
       map.data.addListener('mouseout',
         e => e.feature.setProperty('active', false))
 
-      this.setMapContext(this.state.mapContext)
       this.setState({map})
       this.getBuilding()
+      this.setMapContext(this.state.mapContext)
     })
   }
 
   setMapContext(mapContext) {
     this.setState({mapContext})
-    var context = styles[mapContext]
-    this.state.map.setStyle(context || styles.grey)
+    this.state.map.data.setStyle(styles[mapContext] || styles.grey)
   }
 
   getBuilding(id) {
@@ -94,9 +93,10 @@ class Main extends React.Component {
 
   setFloor(floor) {
     var {map} = this.state
-    api.getFloor(this.state.currentBuildingId, floor).then(json => {
+    api.getFloor(this.state.buildingId, floor).then(json => {
       //remove old features and add new
       map.data.forEach(feature => map.data.remove)
+      console.log(json)
       map.data.addGeoJson(json, {idPropertyName: 'roomid'})
       this.setState({floor})
       //map.fitBounds(getBounds(json)) //TODO: implement getBounds
@@ -121,7 +121,7 @@ class Main extends React.Component {
       <div>
         <Topbar buildingName={this.state.buildingName}
                 buildings={this.state.buildings}
-                setBuilding={this.setBuilding}
+                getBuilding={this.getBuilding}
                 setMapContext={this.setMapContext} />
 
         <Sidebar {...this.state.sidebarProps}

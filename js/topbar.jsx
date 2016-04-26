@@ -7,7 +7,6 @@ class Topbar extends React.Component {
   constructor(props) {
     super(props)
 
-    this.setStyle = this.setStyle.bind(this)
     this.handleBuildingChange = this.handleBuildingChange.bind(this)
   }
 
@@ -17,7 +16,7 @@ class Topbar extends React.Component {
     var index = buildings.map(b => b.name === buildingName).indexOf(true) + 1
     //if that index exists use its id, else use 0
     var id = buildings[index] ? buildings[index].id : buildings[0].id
-    this.props.setBuilding(id)
+    this.props.getBuilding(id)
   }
 
   render() {
@@ -35,8 +34,8 @@ class Topbar extends React.Component {
           Yanzi smart map
         </div>
         
-        <div onClick={() => this.props.setMapContext('percentage')}
-             className={'controller ' + isActive('percentage')}>
+        <div onClick={() => this.props.setMapContext('utilization')}
+             className={'controller ' + isActive('utilization')}>
             &#9281;
         </div>
         
@@ -45,8 +44,8 @@ class Topbar extends React.Component {
             &#8451;
         </div>
 
-        <div onClick={() => this.props.setMapContext('relativeHumidity')}
-             className={'controller ' + isActive('relativeHumidity')}>
+        <div onClick={() => this.props.setMapContext('humidity')}
+             className={'controller ' + isActive('humidity')}>
            &#128167;
         </div>
 

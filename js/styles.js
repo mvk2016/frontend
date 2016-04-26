@@ -1,8 +1,8 @@
 function generateStyleFunction(converter) {
-  return feature => {
+  return feature => ({
       fillColor: convert(feature),
       strokeWeight: feature.getProperty('active') ? 1 : 0
-  }
+  })
 }
 
 function getValue(feature, type) {
@@ -12,7 +12,7 @@ function getValue(feature, type) {
   else                return false
 }
 
-function getTempColor(feature) {
+function temperature(feature) {
   var value = getValue(feature, 'temperature')
   if(!value) return '#B7B7B7'
 
@@ -30,8 +30,8 @@ function getTempColor(feature) {
                        '#FB2210' 
 }
 
-function getUtilColor(feature) {
-  var value = getValue(feature, 'percentage')
+function utilization(feature) {
+  var value = getValue(feature, 'utilization')
   if(!value) return '#B7B7B7'
 
   return value < 0.1 ? '#00FF00' :
@@ -46,8 +46,8 @@ function getUtilColor(feature) {
                        '#FF3300' 
 }
 
-function getHumdColor(feature) {
-  var value = getValue(feature, 'relativeHumidity')
+function humidity(feature) {
+  var value = getValue(feature, 'humidity')
   if(!value) return '#B7B7B7'
 
   return value < 10 ? '#00FF00' :
@@ -63,8 +63,8 @@ function getHumdColor(feature) {
 }
 
 module.exports = {
-  grey: generatestyleFunction(() => '#888'),
-  temperature: generatestyleFunction(temerature),
-  percentage: generatestyleFunction(percentage),
-  relativeHumidity: generatestyleFunction(relativeHumidity)
+  grey: generateStyleFunction(() => '#888'),
+  temperature: generateStyleFunction(temperature),
+  utilization: generateStyleFunction(utilization),
+  humidity: generateStyleFunction(humidity)
 }

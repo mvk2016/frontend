@@ -36,24 +36,18 @@ class Sidebar extends React.Component {
   }
 
   getHistory(startDate) {
-    this.setState({loaded: false})
-    var roomid = this.props.roomid
-    var type = this.props.mapContext
-    api.getHistory(roomid, type, startDate.format()).then(json => {
-      this.setState({history: json, loaded: true})
-    })
+    return event => {
+      this.setState({loaded: false})
+      var roomid = this.props.roomid
+      var type = this.props.mapContext
+      api.getHistory(roomid, type, startDate.format()).then(json => {
+        this.setState({history: json, loaded: true})
+      })
+    }
   }
 
   handleClose() {
     this.setState({visible: false});
-  }
-
-  getName(type) {
-    switch(type) {
-      case 'temperature':      return 'Temperature'
-      case 'relativeHumidity': return 'Humidity'
-      case 'percentage':       return 'Utilization'
-    }
   }
 
   render() {
@@ -74,8 +68,8 @@ class Sidebar extends React.Component {
             {
               data.map(item => (
                 <div key={item.type}>
-                  <span>{this.getName(item.type)}</span>
-                  <span className='data-item'>
+                  <span>{item.type}</span>
+                  <span className='data-item' title={item.collected}>
                     {Math.round(item.value * 10)/10}
                   </span>
                 </div>

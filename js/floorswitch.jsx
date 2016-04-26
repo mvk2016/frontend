@@ -15,10 +15,10 @@ export class Floorswitch extends React.Component {
     var floors = this.props.floors.map(floor => {
       var current = floor === this.props.floor ? ' current-floor-button' : ''
       return (
-        <div key={num}
+        <div key={floor}
              className={'floor-button' + current}
              onClick={this.handleFloorClick(floor)}>
-          {num}
+          {floor}
         </div>
       )
     })
