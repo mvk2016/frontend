@@ -96,7 +96,6 @@ class Main extends React.Component {
     api.getFloor(this.state.buildingId, floor).then(json => {
       //remove old features and add new
       map.data.forEach(feature => map.data.remove)
-      console.log(json)
       map.data.addGeoJson(json, {idPropertyName: 'roomid'})
       this.setState({floor})
       //map.fitBounds(getBounds(json)) //TODO: implement getBounds

@@ -1,4 +1,4 @@
-function generateStyleFunction(converter) {
+function generateStyleFunction(convert) {
   return feature => ({
       fillColor: convert(feature),
       strokeWeight: feature.getProperty('active') ? 1 : 0
