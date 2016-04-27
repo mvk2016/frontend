@@ -23,14 +23,14 @@ function getFloor(buildingid, floor) {
   return getJson(`/buildings/${buildingid}/floors/${floor}`)
 }
 
-function getHistory(roomid, type, startDate, endDate) {
-  var url = `/history/${roomid}/${type}?start=${startDate}`
+function getHistory(roomId, type, startDate, endDate) {
+  var url = `/history/${roomId}/${type}?start=${startDate}`
   if(endDate) url += `&end=${endDate}`
   return getJson(url)
 }
 
 function addWebSocket(onmessage) {
-  var ws = new WebSocket('ws://' + baseUrl)
+  var ws = new WebSocket(`ws://${baseUrl}/ws`)
   ws.onmessage = onmessage
   return ws.close
 }

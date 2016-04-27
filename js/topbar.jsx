@@ -20,36 +20,31 @@ class Topbar extends React.Component {
   }
 
   render() {
-    var {data} = this.props
+    var {data, mapContext} = this.props
 
-    var isActive = c => this.props.mapContext === c ? 'active-view': ''
+    var isActive = c => c === mapContext ? ' active-view': ''
 
     return (
       <div id='topbar'>
-        <div id='icon'>
-          <img src={'imgs/y-logo-small.png'} className='resize' />
-        </div>
-
-        <div id='topbar-title'>
+        <img className='left' src={'imgs/y-logo-small.png'} />
+        <div className='left'>
           Yanzi smart map
         </div>
         
         <div onClick={() => this.props.setMapContext('utilization')}
-             className={'controller ' + isActive('utilization')}>
+             className={'controller' + isActive('utilization')}>
             &#9281;
         </div>
-        
         <div onClick={() => this.props.setMapContext('temperature')}
-             className={'controller ' + isActive('temperature')}>
+             className={'controller' + isActive('temperature')}>
             &#8451;
         </div>
-
         <div onClick={() => this.props.setMapContext('humidity')}
-             className={'controller ' + isActive('humidity')}>
+             className={'controller' + isActive('humidity')}>
            &#128167;
         </div>
 
-        <div id='location' onClick={this.handleBuildingChange}>
+        <div className='center' onClick={this.handleBuildingChange}>
           {this.props.buildingName}
         </div>
       </div>

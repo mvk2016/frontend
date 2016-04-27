@@ -6,7 +6,7 @@ function generateStyleFunction(convert) {
 }
 
 function getValue(feature, type) {
-  var elem = feature.getProperty('data').filter(e => e.name === type)
+  var elem = feature.getProperty('data').filter(e => e.type === type)
   
   if(elem.length > 0) return elem[0].value
   else                return false

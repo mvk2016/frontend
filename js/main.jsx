@@ -18,6 +18,7 @@ class Main extends React.Component {
       floors: [],
       floor: false,
       sidebarProps: {data: []},
+      sidebarVisible: false,
       mapContext: 'temperature',
       map: false
     }
@@ -118,7 +119,7 @@ class Main extends React.Component {
     feature.setProperty('data', data)
 
     //room is shown in sidebar, also update sidebar
-    if(json.roomid === sidebarProps.roomid)
+    if(json.roomId === sidebarProps.roomId)
       this.setState({sidebarProps: Object.assign({}, sidebarProps, {data})})
   }
 
@@ -128,7 +129,8 @@ class Main extends React.Component {
         <Topbar buildingName={this.state.buildingName}
                 buildings={this.state.buildings}
                 getBuilding={this.getBuilding}
-                setMapContext={this.setMapContext} />
+                setMapContext={this.setMapContext}
+                mapContext={this.state.mapContext} />
 
         <Sidebar {...this.state.sidebarProps}
                  mapContext={this.state.mapContext}/>
