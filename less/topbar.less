@@ -45,11 +45,19 @@
     height: 100%;
     width: 4rem;
     text-align: center;
+    font-size: 1.8rem;
+    padding-top: 1rem;
+    background-color: lighten(@base, 5);
+    color: lighten(@base, 45);
+    border-left: 2px solid lighten(@base, 5);
+    border-right: 2px solid lighten(@base, 5);
   }
 
   .active-view {
-    background-color: #f8f8f8;
+    background-color: lighten(@base, 45);
     color: @base;
+    border-left: 2px solid darken(@base, 5);
+    border-right: 2px solid darken(@base, 5);
   }
 
 }

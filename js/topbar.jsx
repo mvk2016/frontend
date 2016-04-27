@@ -33,15 +33,15 @@ class Topbar extends React.Component {
         
         <div onClick={() => this.props.setMapContext('utilization')}
              className={'controller' + isActive('utilization')}>
-            &#9281;
+            <span className='fa fa-pie-chart'></span>
         </div>
         <div onClick={() => this.props.setMapContext('temperature')}
              className={'controller' + isActive('temperature')}>
-            &#8451;
+            <span className='fa fa-fire'></span>
         </div>
         <div onClick={() => this.props.setMapContext('humidity')}
              className={'controller' + isActive('humidity')}>
-           &#128167;
+            <span className='fa fa-tint'></span>
         </div>
 
         <div className='center' onClick={this.handleBuildingChange}>
