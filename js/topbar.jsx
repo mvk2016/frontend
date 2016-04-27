@@ -26,7 +26,7 @@ class Topbar extends React.Component {
 
     return (
       <div id='topbar'>
-        <img className='left' src={'imgs/y-logo-small.png'} />
+        <img className='left' src={'imgs/y-logo.png'} />
         <div className='left'>
           Yanzi smart map
         </div>
