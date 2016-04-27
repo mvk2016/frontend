@@ -3,7 +3,7 @@ var ReactDom  = require('react-dom')
 var LineChart = require('react-chartjs').Line
 var Loader    = require('react-loader')
 var moment    = require('moment')
-window.moment = moment
+
 var api       = require('./api.js')
 
 class Sidebar extends React.Component {
@@ -20,7 +20,7 @@ class Sidebar extends React.Component {
   }
 
   componentDidMount() {
-    this.getHistory()
+    this.getHistory(moment().subtract(1, 'day'))
   }
 
   componentWillReceiveProps(props) {
@@ -41,7 +41,6 @@ class Sidebar extends React.Component {
       var roomId = this.props.roomId
       var type = this.props.mapContext
       api.getHistory(roomId, type, startDate.toISOString()).then(json => {
-        console.log(json)
         this.setState({history: json, loaded: true})
       })
     }

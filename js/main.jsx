@@ -104,7 +104,10 @@ class Main extends React.Component {
   }
 
   updateRoom(json) {
-    var feature = this.state.map.getFeatureById(json.roomId)
+    var feature = this.state.map.data.getFeatureById(json.roomId)
+
+    //data recieived was not on the current floor
+    if(!feature) return;
 
     //remove old data item
     var data = feature.getProperty('data')
@@ -114,7 +117,7 @@ class Main extends React.Component {
       roomId: json.roomId,
       type: json.type,
       value: json.value,
-      collected: json.ceollected
+      collected: json.collected
     })
     feature.setProperty('data', data)
 

@@ -1,14 +1,14 @@
 #sidebar {
   position: absolute;
-  top:  60px;
+  top:  4rem;
   bottom: 0px;
   left: 0; /*TODO:set to -400px*/
   width: 400px;
   background-color: #f2f2f2;
   padding: 10px;
   overflow: auto;
+  
   h1 {
-    font-size: 20pt;
     color: #8e8e8e;
     text-align: center;
     text-transform: uppercase;
@@ -17,6 +17,7 @@
   }
 
   .close {
+    color: #8e8e8e;
     cursor: pointer;
     float: right;
   }
@@ -73,6 +74,7 @@
     }
   
     .item-range-select {
+      margin-top: 5px;
       text-align: center;
       
       a {
@@ -81,6 +83,7 @@
         padding-right: 5px;
         text-decoration: none;
         cursor: pointer;
+        color: #8e8e8e;
 
         &:hover {
           text-decoration: underline;
@@ -94,12 +97,13 @@
   }
 }
 
-
-
-
 .loader {
   position: relative;
   height: 75px;
+}
+
+.loadedContent {
+  text-align: center;
 }
 
 .animate {
