@@ -34,7 +34,8 @@ class Main extends React.Component {
       center: {lat:59.34669, lng: 18.07372},
       zoom: 20,
       mapTypeControl: false,
-      streetViewControl: false
+      streetViewControl: false,
+      zoomControl: false
     })
 
     api.addWebSocket(this.updateRoom)
