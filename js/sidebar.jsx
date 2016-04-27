@@ -65,7 +65,7 @@ class Sidebar extends React.Component {
           (<div className='subtitle'>There are no sensors in this room</div>) : 
           (<div>
             <div className='subtitle'>
-              Updated {moment(data.map(d => d.collected).sort()[0]).fromNow()}.
+              Updated {moment(data.map(d => d.collected).sort()[0]).fromNow()}
             </div>
             <div className='item'>
               <div className='item-head'>
