@@ -12,5 +12,5 @@ app.get('/js/bundle.js', browserify(__dirname + '/js/main.jsx'));
  */
 app.use(express.static(__dirname));
 
-app.listen('8000');
-console.log('Listening on port 8000');
+app.listen(process.env.port || 8000);
+console.log('Listening on port ' + process.env.port || 8000);
