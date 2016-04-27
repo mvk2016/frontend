@@ -54,7 +54,8 @@ class Main extends React.Component {
         e => e.feature.setProperty('active', false))
 
       this.setState({map})
-      this.getBuilding()
+      window.map = map
+      this.getBuilding(871073)
       this.setMapContext(this.state.mapContext)
     })
   }
@@ -96,10 +97,18 @@ class Main extends React.Component {
     var {map} = this.state
     api.getFloor(this.state.buildingId, floor).then(json => {
       //remove old features and add new
-      map.data.forEach(feature => map.data.remove)
+      map.data.forEach(feature => map.data.remove(feature))
       map.data.addGeoJson(json, {idPropertyName: 'roomId'})
       this.setState({floor})
       //map.fitBounds(getBounds(json)) //TODO: implement getBounds
+    }).catch(code => {
+      if(code == 404) {
+        console.log("No rooms on that floor.")
+        //still remove old rooms and update floor state
+        map.data.forEach(feature => map.data.remove(feature))
+        this.setState({floor})
+      }
+      else throw code
     })
   }
 
@@ -110,8 +119,7 @@ class Main extends React.Component {
     if(!feature) return;
 
     //remove old data item
-    var data = feature.getProperty('data')
-                      .filter(i => i.type !== json.type)
+    var data = feature.getProperty('data').filter(i => i.type !== json.type)
     //add new data item
     data.push({
       roomId: json.roomId,
@@ -147,4 +155,3 @@ class Main extends React.Component {
 }
 
 ReactDom.render(<Main />, document.getElementById('container'))
-

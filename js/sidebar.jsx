@@ -57,14 +57,16 @@ class Sidebar extends React.Component {
     var animation = visible ? 'animate-in' : 'animate-out'
     return (
       <div id='sidebar' className={'animate ' + animation}>
-        <span onClick={this.handleClose} 
-              className='close'>&#10006;</span>
+        <span onClick={this.handleClose} className='close'>&#10006;</span>
 
         <h1>{name}</h1>
 
         {data.length === 0 ? 
-          (<div className='missing'>There are no sensors in this room</div>) : 
+          (<div className='subtitle'>There are no sensors in this room</div>) : 
           (<div>
+            <div className='subtitle'>
+              Updated {moment(data.map(d => d.collected).sort()[0]).fromNow()}.
+            </div>
             <div className='item'>
               <div className='item-head'>
                 <h2>Current Data</h2>
@@ -75,7 +77,10 @@ class Sidebar extends React.Component {
                     <div key={item.type}>
                       <span>{item.type}</span>
                       <span className='data' title={item.collected}>
-                        {Math.round(item.value * 10)/10}
+                        {item.type === 'temperature' ?
+                          Math.round((item.value - 273.16) * 10)/10 :
+                          Math.round(item.value * 10)/10
+                        }
                       </span>
                     </div>
                   ))

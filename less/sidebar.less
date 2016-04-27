@@ -2,7 +2,7 @@
   position: absolute;
   top:  4rem;
   bottom: 0px;
-  left: 0; /*TODO:set to -400px*/
+  left: 0;
   width: 400px;
   background-color: #f2f2f2;
   padding: 10px;
@@ -24,9 +24,10 @@
     float: right;
   }
 
-  .missing {
+  .subtitle {
     text-align: center;
     color: #aaaaaa;
+    margin-bottom: 20px;
   }
 
   .item {
@@ -115,14 +116,14 @@
 }
 
 .animate-in {
-  animation-name: animateInKey;
+  animation-name: animate-in-key;
 }
 
 .animate-out {
-  animation-name: animateOutKey;
+  animation-name: animate-out-key;
 }
 
-@keyframes animateInKey {
+@keyframes animate-in-key {
   0% {
     left: -420px;
   }
@@ -131,7 +132,7 @@
   }
 }
 
-@keyframes animateOutKey {
+@keyframes animate-out-key {
   0% {
     left: 0;
   }

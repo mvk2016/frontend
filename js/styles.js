@@ -16,6 +16,8 @@ function temperature(feature) {
   var value = getValue(feature, 'temperature')
   if(!value) return '#B7B7B7'
 
+  value -= 273.16 //account for kelvin sensor data.
+
   return  value < 0  ? '#9C2FAE' :
           value < 5  ? '#663FB4' :
           value < 10 ? '#4055B2' :
