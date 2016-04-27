@@ -54,7 +54,7 @@ class Sidebar extends React.Component {
 
     var chartData = loaded ? {labels: history.labels, datasets:[{data: history.data}]} : false
     
-    var animation = visible ? 'animate-in' : 'animate-out'    
+    var animation = visible ? 'animate-in' : 'animate-out'
     return (
       <div id='sidebar' className={'animate ' + animation}>
         <span onClick={this.handleClose} 
