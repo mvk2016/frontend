@@ -22,12 +22,13 @@ class Sidebar extends React.Component {
   componentWillReceiveProps(props) {
     if (props.roomId &&
         this.props.roomId === props.roomId &&
-        this.props.data === props.data) {
+        this.props.data === props.data &&
+        this.props.mapContext === props.mapContext) {
       this.setState({visible: !this.state.visible})
     }
     else if(this.props.roomId !== props.roomId) {
       this.setState({visible: true})
-      this.getHistory(moment().subtract(1, 'day'))
+      this.getHistory(moment().subtract(1, 'day'), props.roomId)
     }
   }
 
@@ -35,9 +36,8 @@ class Sidebar extends React.Component {
     return () => this.getHistory(startDate)
   }
 
-  getHistory(startDate) {
+  getHistory(startDate, roomId = this.props.roomId) {
     this.setState({loaded: false})
-    var roomId = this.props.roomId
     var type = this.props.mapContext
     api.getHistory(roomId, type, startDate.toISOString()).then(json => {
       this.setState({history: json, loaded: true})
