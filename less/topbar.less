@@ -5,7 +5,8 @@
   height: 4rem;
   font-size: 3rem;
   color: #f8f8f8;
-  background-color: #50b649;
+  background-color: #50b648;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, .2);
   overflow: hidden;
   z-index: 2;
 
@@ -13,8 +14,24 @@
     float: left;
   }
 
+  div.left {
+    text-transform: uppercase;
+    font-size: 27px;
+    margin-top: 1rem;
+    font-weight: bold;
+    padding-left: 10px;
+  }
+
   .center {
     text-align: center;
+    font-size: 25px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .6);
+    margin-top: 1rem;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   .controller {
