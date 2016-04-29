@@ -17,8 +17,9 @@ class Main extends React.Component {
       buildingName: '',
       floors: [],
       floor: false,
-      sidebarProps: {data: []},
-      sidebarVisible: false,
+      data: [],
+      roomId: false,
+      name: false,
       mapContext: 'temperature',
       map: false
     }
@@ -46,7 +47,11 @@ class Main extends React.Component {
       var map = new google.maps.Map(document.getElementById('map'), options)
       
       map.data.addListener('click', 
-        e => this.setState({sidebarProps: e.feature.R}))
+        e => this.setState({
+          data: e.feature.getProperty('data'),
+          roomId: e.feature.getProperty('roomId'),
+          name: e.feature.getProperty('name')
+        }))
       
       map.data.addListener('mouseover', 
         e => e.feature.setProperty('active', true))
@@ -144,7 +149,9 @@ class Main extends React.Component {
                 setMapContext={this.setMapContext}
                 mapContext={this.state.mapContext} />
 
-        <Sidebar {...this.state.sidebarProps}
+        <Sidebar data={this.state.data}
+                 roomId={this.state.roomId}
+                 name={this.state.name}
                  mapContext={this.state.mapContext}/>
         
         <Floorswitch floors={this.state.floors}

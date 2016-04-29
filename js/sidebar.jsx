@@ -1,22 +1,18 @@
 var React     = require('react')
-var ReactDom  = require('react-dom')
-var LineChart = require('react-chartjs').Line
-var Loader    = require('react-loader')
-var moment    = require('moment')
 
-var api       = require('./api.js')
+var moment = require('moment')
+
+var CurrentCard = require('./sidebar/current-card.jsx')
+var HistoryCard = require('./sidebar/history-card.jsx')
 
 class Sidebar extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       visible: false,
-      history: {labels: [], datasets: []},
-      loaded: false
     }
 
     this.handleClose = this.handleClose.bind(this)
-    this.getHistory  = this.getHistory.bind(this)
   }
 
   componentWillReceiveProps(props) {
@@ -28,20 +24,7 @@ class Sidebar extends React.Component {
     }
     else if(this.props.roomId !== props.roomId) {
       this.setState({visible: true})
-      this.getHistory(moment().subtract(1, 'day'), props.roomId)
     }
-  }
-
-  getHistoryCallback(startDate) {
-    return () => this.getHistory(startDate)
-  }
-
-  getHistory(startDate, roomId = this.props.roomId) {
-    this.setState({loaded: false})
-    var type = this.props.mapContext
-    api.getHistory(roomId, type, startDate.toISOString()).then(json => {
-      this.setState({history: json, loaded: true})
-    })
   }
 
   handleClose() {
@@ -49,11 +32,9 @@ class Sidebar extends React.Component {
   }
 
   render() {
-    var {data, name} = this.props
-    var {loaded, history, visible} = this.state
+    var {data, name, roomId, mapContext} = this.props
+    var {visible} = this.state
 
-    var chartData = loaded ? {labels: history.labels, datasets:[{data: history.data}]} : false
-    
     var animation = visible ? 'animate-in' : 'animate-out'
     return (
       <div id='sidebar' className={'animate ' + animation}>
@@ -67,42 +48,8 @@ class Sidebar extends React.Component {
             <div className='subtitle'>
               Updated {moment(data.map(d => d.collected).sort()[0]).fromNow()}
             </div>
-            <div className='item'>
-              <div className='item-head'>
-                <h2>Current Data</h2>
-              </div>
-              <div className='item-list'>
-                {
-                  data.map(item => (
-                    <div key={item.type}>
-                      <span>{item.type}</span>
-                      <span className='data' title={item.collected}>
-                        {item.type === 'temperature' ?
-                          Math.round((item.value - 273.16) * 10)/10 :
-                          Math.round(item.value * 10)/10
-                        }
-                      </span>
-                    </div>
-                  ))
-                }
-              </div>
-            </div>
-            <div className='item'>
-              <div className='item-head'>
-                <h2>Historical Data</h2>
-              </div>
-
-              <div className='item-range-select'>
-                <a onClick={this.getHistoryCallback(moment().subtract(1, 'day'))}>1 Day</a>
-                <a onClick={this.getHistoryCallback(moment().subtract(3, 'day'))}>3 Day</a>
-                <a onClick={this.getHistoryCallback(moment().subtract(1, 'week'))}>1 Week</a>
-                <a onClick={this.getHistoryCallback(moment().subtract(1, 'month'))}>1 Month</a>
-              </div>
-
-              <Loader loaded={loaded}>
-                <LineChart data={chartData} />
-              </Loader>
-            </div>
+            <CurrentCard data={data} />
+            <HistoryCard roomId={roomId} mapContext={mapContext} />
           </div>
         )}
       </div>

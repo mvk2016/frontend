@@ -1,5 +1,4 @@
 var React    = require('react')
-var ReactDom = require('react-dom')
 
 export class Floorswitch extends React.Component {
   constructor(props) {
