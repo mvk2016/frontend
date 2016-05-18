@@ -12,44 +12,41 @@ class HistoryCard extends React.Component {
     super(props)
     this.state = {
       loaded: false,
+      current: '1day',
       history: {labels: [], data: []}
     }
     this.getHistory         = this.getHistory.bind(this)
-    this.getHistoryCallback = this.getHistoryCallback.bind(this)
   }
 
   componentDidMount(props) {
-    this.getHistory(moment().subtract(1, 'day'), this.props.roomId)  
+    this.getHistory(1, 'day')
   }
 
   componentWillReceiveProps(props) {
-    this.getHistory(moment().subtract(1, 'day'), props.roomId)  
+    this.getHistory(1, 'day', props.roomId)
   }
 
-  getHistoryCallback(startDate) {
-    return () => this.getHistory(startDate)
-  }
-
-  getHistory(startDate, roomId = this.props.roomId) {
-    this.setState({loaded: false})
-    var type = this.props.mapContext
-    api.getHistory(roomId, type, startDate.toISOString()).then(json => {
+  getHistory(amount, unit, roomId = this.props.roomId) {
+    this.setState({loaded: false, current: amount + unit})
+    var startDate = moment().subtract(amount, unit).toISOString()
+    var {mapContext, } = this.props
+    api.getHistory(roomId, mapContext, startDate).then(json => {
       this.setState({history: json, loaded: true})
     })
   }
 
   render() {
-    var {loaded, history} = this.state
+    var {loaded, history, current} = this.state
     var chartData = loaded ? {labels: history.labels, datasets:[{data: history.data}]} : false
+    var active = (amount, unit) => current === (amount + unit) ? 'active' : ''
     return (
       <Card title='Historical Data'>
         <div className='item-range-select'>
-          <a onClick={this.getHistoryCallback(moment().subtract(1, 'day'))}>1 Day</a>
-          <a onClick={this.getHistoryCallback(moment().subtract(3, 'day'))}>3 Day</a>
-          <a onClick={this.getHistoryCallback(moment().subtract(1, 'week'))}>1 Week</a>
-          <a onClick={this.getHistoryCallback(moment().subtract(1, 'month'))}>1 Month</a>
+          <a className={active(1, 'day')} onClick={e => this.getHistory(1, 'day')}>1 Day</a>
+          <a className={active(3, 'day')} onClick={e => this.getHistory(3, 'day')}>3 Days</a>
+          <a className={active(1, 'week')} onClick={e => this.getHistory(1, 'week')}>1 Week</a>
+          <a className={active(1, 'month')} onClick={e => this.getHistory(1, 'month')}>1 Month</a>
         </div>
-
         <Loader loaded={loaded}>
           <LineChart data={chartData} />
         </Loader>

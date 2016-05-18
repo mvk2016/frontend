@@ -1,7 +1,7 @@
-function generateStyleFunction(convert) {
+function generateStyleFunction(converter) {
   return feature => ({
-      fillColor: convert(feature),
-      strokeWeight: feature.getProperty('active') ? 1 : 0
+    fillColor: converter(feature),
+    strokeWeight: feature.getProperty('active') ? 1 : 0
   })
 }
 
@@ -16,18 +16,18 @@ function temperature(feature) {
   var value = getValue(feature, 'temperature')
   if(!value) return '#B7B7B7'
 
-  return  value < 0  ? '#9C2FAE' :
-          value < 5  ? '#663FB4' :
-          value < 10 ? '#4055B2' :
-          value < 13 ? '#587CF7' :
-          value < 15 ? '#1DAAF2' :
-          value < 17 ? '#159489' :
-          value < 19 ? '#1BB31B' :
-          value < 22 ? '#1CD31C' :
-          value < 25 ? '#FEC031' :
-          value < 32 ? '#FD9728' :
-          value < 40 ? '#FB582F' :
-                       '#FB2210' 
+  return value < 0  ? '#9C2FAE' :
+         value < 5  ? '#663FB4' :
+         value < 10 ? '#4055B2' :
+         value < 13 ? '#587CF7' :
+         value < 15 ? '#1DAAF2' :
+         value < 17 ? '#159489' :
+         value < 19 ? '#1BB31B' :
+         value < 22 ? '#1CD31C' :
+         value < 25 ? '#FEC031' :
+         value < 32 ? '#FD9728' :
+         value < 40 ? '#FB582F' :
+                      '#FB2210' 
 }
 
 function utilization(feature) {

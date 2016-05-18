@@ -27,6 +27,7 @@ class Main extends React.Component {
     this.loadMap       = this.loadMap.bind(this)
     this.setMapContext = this.setMapContext.bind(this)
     this.getBuilding   = this.getBuilding.bind(this)
+    this.nextBuilding  = this.nextBuilding.bind(this)
     this.getFloors     = this.getFloors.bind(this)
     this.setFloor      = this.setFloor.bind(this)
     this.updateRoom    = this.updateRoom.bind(this)
@@ -47,11 +48,15 @@ class Main extends React.Component {
       var map = new google.maps.Map(document.getElementById('map'), options)
       
       map.data.addListener('click', 
-        e => this.setState({
-          data: e.feature.getProperty('data'),
-          roomId: e.feature.getProperty('roomId'),
-          name: e.feature.getProperty('name')
-        }))
+        e => {
+          var roomId = e.feature.getProperty('roomId')
+          this.setState({
+                roomId,
+                data: e.feature.getProperty('data'),
+                name: e.feature.getProperty('name'),
+                visible: roomId === this.state.roomId ? !this.state.visible : true,
+          })
+        })
       
       map.data.addListener('mouseover', 
         e => e.feature.setProperty('active', true))
@@ -69,6 +74,15 @@ class Main extends React.Component {
   setMapContext(mapContext) {
     this.setState({mapContext})
     this.state.map.data.setStyle(styles[mapContext] || styles.grey)
+  }
+
+  nextBuilding() {
+    var {buildings, buildingName} = this.state
+    //find index of next building in list
+    var index = buildings.map(b => b.name === buildingName).indexOf(true) + 1
+    //if that index exists use its id, else use 0
+    var id = buildings[index] ? buildings[index].id : buildings[0].id
+    this.getBuilding(id)
   }
 
   getBuilding(id) {
@@ -105,7 +119,7 @@ class Main extends React.Component {
       //remove old features and add new
       map.data.forEach(feature => map.data.remove(feature))
       map.data.addGeoJson(json, {idPropertyName: 'roomId'})
-      this.setState({floor})
+      this.setState({floor, visible: false})
       //map.fitBounds(getBounds(json)) //TODO: implement getBounds
     }).catch(code => {
       if(code == 404) {
@@ -143,15 +157,15 @@ class Main extends React.Component {
   render() {
     return (
       <div>
-        <Topbar buildingName={this.state.buildingName}
-                buildings={this.state.buildings}
-                getBuilding={this.getBuilding}
+        <Topbar nextBuilding={this.nextBuilding}
                 setMapContext={this.setMapContext}
                 mapContext={this.state.mapContext} />
 
         <Sidebar data={this.state.data}
                  roomId={this.state.roomId}
                  name={this.state.name}
+                 visible={this.state.visible}
+                 onClose={() => this.setState({visible: false})}
                  mapContext={this.state.mapContext}/>
         
         <Floorswitch floors={this.state.floors}

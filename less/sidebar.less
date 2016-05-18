@@ -79,16 +79,16 @@
   
     .item-range-select {
       margin-top: 5px;
+      margin-right: 10px;
       text-align: center;
       
       a {
         text-decoration: none;
         cursor: pointer;
         color: #8e8e8e;
-        width: 20%;
         font-size: 15px;
         display: inline-block;
-        padding: 10px 0;
+        padding: 10px;
         text-transform: uppercase;
         border-bottom: 3px solid #f0f0f0;
         background: #f6f6f6;
@@ -96,6 +96,10 @@
 
         &:hover {
           color: @base;
+        }
+
+        &.active {
+          font-weight: bold;
         }
       }
     }
