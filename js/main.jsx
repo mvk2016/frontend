@@ -157,7 +157,8 @@ class Main extends React.Component {
   render() {
     return (
       <div>
-        <Topbar nextBuilding={this.nextBuilding}
+        <Topbar buildingName={this.state.buildingName}
+                nextBuilding={this.nextBuilding}
                 setMapContext={this.setMapContext}
                 mapContext={this.state.mapContext} />
 

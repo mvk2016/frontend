@@ -48,7 +48,12 @@ class HistoryCard extends React.Component {
           <a className={active(1, 'month')} onClick={e => this.getHistory(1, 'month')}>1 Month</a>
         </div>
         <Loader loaded={loaded}>
-          <LineChart data={chartData} />
+          {chartData && chartData.labels.length > 0 ?
+            <LineChart data={chartData} /> :
+            <span className='subtitle'>
+              No data available for this period.
+            </span>
+          }
         </Loader>
       </Card>
     )
