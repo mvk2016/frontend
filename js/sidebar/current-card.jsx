@@ -2,6 +2,11 @@ var React = require('react')
 
 var Card  = require('./card.jsx')
 
+/**
+ * A card that displays current data.
+ * Defined as a function as it has no state of its own.
+ */
+
 function CurrentCard(props) {
   return (
     <Card title='Current Data'>

@@ -11,6 +11,10 @@ function getJson(url) {
   })
 }
 
+/**
+ *  Wrappers for different api-endpoints
+ */
+
 function getBuildings() {
   return getJson('/buildings')
 }
@@ -28,6 +32,11 @@ function getHistory(roomId, type, startDate, endDate) {
   if(endDate) url += `&end=${endDate}`
   return getJson(url)
 }
+
+/**
+ * Opens a websocket connection and sets the onmessage event.
+ * Returns the close function, so that the caller can close the connection.
+ */
 
 function addWebSocket(onmessage) {
   var ws = new WebSocket(`ws://${baseUrl}/ws`)

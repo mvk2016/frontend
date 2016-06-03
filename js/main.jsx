@@ -1,3 +1,5 @@
+require('whatwg-fetch')
+
 var React    = require('react')
 var ReactDom = require('react-dom')
 
@@ -23,7 +25,7 @@ class Main extends React.Component {
       mapContext: 'temperature',
       map: false
     }
-    
+
     this.loadMap       = this.loadMap.bind(this)
     this.setMapContext = this.setMapContext.bind(this)
     this.getBuilding   = this.getBuilding.bind(this)
@@ -43,6 +45,9 @@ class Main extends React.Component {
     api.addWebSocket(this.updateRoom)
   }
 
+  /**
+   * Loads the map and add a few handlers to it so that we can interact with it.
+   */
   loadMap(options) {
     require('google-maps').load(google => {
       var map = new google.maps.Map(document.getElementById('map'), options)
@@ -50,11 +55,15 @@ class Main extends React.Component {
       map.data.addListener('click', 
         e => {
           var roomId = e.feature.getProperty('roomId')
+
+          // If the same room is clicked toggle the sidebar, else always open it.
+          var visible = roomId === this.state.roomId ? !this.state.visible : true
+
           this.setState({
                 roomId,
+                visible,
                 data: e.feature.getProperty('data'),
-                name: e.feature.getProperty('name'),
-                visible: roomId === this.state.roomId ? !this.state.visible : true,
+                name: e.feature.getProperty('name')
           })
         })
       
@@ -65,17 +74,25 @@ class Main extends React.Component {
         e => e.feature.setProperty('active', false))
 
       this.setState({map})
-      window.map = map
-      this.getBuilding(871073)
+      //window.map = map // useful when debuging
+
+      this.getBuilding(871073) //Could also pass in nothing
       this.setMapContext(this.state.mapContext)
     })
   }
 
+  /**
+   * Changes the map context to the provided context.
+   * If the provided context doesnt exist it defaults to gray.
+   */
   setMapContext(mapContext) {
     this.setState({mapContext})
     this.state.map.data.setStyle(styles[mapContext] || styles.grey)
   }
 
+  /**
+   * Changes the building to the next building in the buildings list.
+   */
   nextBuilding() {
     var {buildings, buildingName} = this.state
     //find index of next building in list
@@ -85,6 +102,9 @@ class Main extends React.Component {
     this.getBuilding(id)
   }
 
+  /**
+   * Changes current building and gets floors for building.
+   */
   getBuilding(id) {
     api.getBuildings().then(({buildings}) => {
       var filtered = buildings.filter(b => b.id === id)
@@ -105,6 +125,9 @@ class Main extends React.Component {
     })
   }
 
+  /**
+   * Gets floors for a building and sets current floor if one exists.
+   */
   getFloors(buildingid) {
     api.getFloors(buildingid).then(({floors}) => {
       this.setState({floors})
@@ -113,6 +136,9 @@ class Main extends React.Component {
     })
   }
 
+  /**
+   * Gets floor data and adds it to the maps.
+   */
   setFloor(floor) {
     var {map} = this.state
     api.getFloor(this.state.buildingId, floor).then(json => {
@@ -120,7 +146,7 @@ class Main extends React.Component {
       map.data.forEach(feature => map.data.remove(feature))
       map.data.addGeoJson(json, {idPropertyName: 'roomId'})
       this.setState({floor, visible: false})
-      //map.fitBounds(getBounds(json)) //TODO: implement getBounds
+      //map.fitBounds(getBounds(json)) //TODO: implement getBounds to automatically center map around building
     }).catch(code => {
       if(code == 404) {
         console.log("No rooms on that floor.")
@@ -132,24 +158,28 @@ class Main extends React.Component {
     })
   }
 
+  /**
+   * Handles incoming websocket messages by adding their data to the map.
+   */
   updateRoom(json) {
     var feature = this.state.map.data.getFeatureById(json.roomId)
 
-    //data recieived was not on the current floor
+    // Data recieived was not on the current floor
     if(!feature) return;
 
-    //remove old data item
+    // Remove old data item
     var data = feature.getProperty('data').filter(i => i.type !== json.type)
-    //add new data item
+    // Add new data item
     data.push({
       roomId: json.roomId,
       type: json.type,
       value: json.value,
       collected: json.collected
     })
+    // Replace the data property
     feature.setProperty('data', data)
 
-    //room is shown in sidebar, also update sidebar
+    // If room is shown in sidebar, also update sidebar
     if(json.roomId === sidebarProps.roomId)
       this.setState({sidebarProps: Object.assign({}, sidebarProps, {data})})
   }

@@ -2,7 +2,12 @@ var React = require('react')
 
 var api = require('./api.js')
 
+/**
+ * A top bar that shows the name of the building and has a few buttons
+ * that allows the user to switch the context for the map.
+ */
 function Topbar(props) {
+  // Helper function to check which context is the current one
   var isActive = c => c === props.mapContext ? ' active-view': ''
 
   return (
