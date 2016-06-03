@@ -1,137 +1,39 @@
-var React     = require('react')
-var ReactDom  = require('react-dom')
-var LineChart = require('react-chartjs').Line
-var Loader    = require('react-loader')
+var React  = require('react')
+var moment = require('moment')
 
-var api       = require('./apiWrapper.js')
+var CurrentCard = require('./sidebar/current-card.jsx')
+var HistoryCard = require('./sidebar/history-card.jsx')
+/**
+ * The main sidebar component that handles the animation logic,
+ * closing the sidebar, checking if there are any sensors in the
+ * room, showing a last-updated value, and holds the sidebar-cars.
+ */
+function Sidebar(props) {
+  var {data, name, roomId, mapContext, visible, onClose} = props
 
-var sidebarwrapper = document.querySelector('#sidebarwrapper')
-var currentId;
-var hidden = true;
+  // Select the correct animation class
+  var animation = 'animate ' + (visible ? 'animate-in' : 'animate-out')
 
-class SidebarComponent extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      visible: true,
-      history: {labels: [], datasets: []},
-      loaded: false
-    }
+  return (
+    <div id='sidebar' className={animation}>
+      <span onClick={onClose} className='close'>&#10006;</span>
 
-    this.handleClose = this.handleClose.bind(this)
-    this.getHistory = this.getHistory.bind(this)
-  }
+      <h1>{name}</h1>
 
-  componentDidMount() {
-    this.getHistory(this.props.roomid)
-  }
-
-  componentWillReceiveProps(props) {
-    if(this.props.roomid === props.roomid && this.props.data === props.data) {
-      this.setState({visible: !this.state.visible})
-    }
-    else if(this.props.roomid !== props.roomid) {
-      this.getHistory(props.roomid)
-    }
-  }
-
-  getHistory(roomid) {
-    this.setState({loaded: false})
-    api.getHistory(this.props.floorid, roomid).then(json => {
-      this.setState({history: json, loaded: true})
-    })
-  }
-
-  handleClose() {
-    document.getElementById("sidebar").className = "animate animateOut";
-    hidden = true;
-    this.setState({visible: false});
-  }
-
-  render() {
-    var data = this.props.data;
-
-    return (
-      <div id='sidebar'>
-        <span onClick={this.handleClose} className='glyphicon glyphicon-remove close'></span>
-
-        <h1>{this.props.roomname}</h1>
-
-        <div id='data' className="sidebar_item">
-          <div className="sidebar_item_head">
-            <h2>Data</h2>
+      {data.length === 0 ?
+        (<div className='subtitle'>There are no sensors in this room</div>) :
+        (<div>
+          <div className='subtitle'>
+            Updated {moment(data.map(d => d.collected).sort()[0]).fromNow()}
           </div>
-          <div className="sidebar_subitem_contaier">
-            {data.map((item, index) => (
-              <div key={item.name} className="sidebar_subitem">
-                <span>{item.name}</span>
-                <span className="right">{Math.round(item.value * 10)/10}</span>
-              </div>
-            ))}
-          </div>
+
+          <CurrentCard data={data} />
+          <HistoryCard roomId={roomId} mapContext={mapContext} />
+
         </div>
-        <div className="sidebar_item">
-          <div className="sidebar_item_head">
-            <h2>Chart</h2>
-          </div>
-          <div className="sidebar_subitem_contaier">
-            <div className="calender-wrapper sidebar_subitem">
-              <div className="calender-interval"  >From: </div>
-              <input className="calender-picker" type="date" data-date-inline-picker="true" data-date-popover='{"inline": true}' />
-            </div>
-            <div className="calender-wrapper sidebar_subitem">
-              <div className="calender-interval" >To: </div>
-              <input className="calender-picker" type="date" data-date-inline-picker="true" data-date-popover='{"inline": true}' placeholder="" />
-            </div>
-            <Loader loaded={this.state.loaded}>
-              <LineChart data={this.state.history} />
-            </Loader>
-          </div>
-        </div>
-      </div>
-    )
-  }
-}
-
-function renderSidebar(floorid, props) {
-  ReactDom.render(
-    <SidebarComponent floorid={floorid}
-                      roomid={props.roomid}
-                      roomname={props.name}
-                      data={props.data} />,
-    sidebarwrapper
+      )}
+    </div>
   )
-  currentId = props.roomid
 }
 
-function updateSidebar(floorid, props) {
-  if(props.roomid == currentId) {
-    ReactDom.render(
-      <SidebarComponent floorid={floorid}
-                        roomid={props.roomid}
-                        roomname={props.name}
-                        data={props.data} />,
-      sidebarwrapper
-    )
-  }
-}
-
-function getRoomId() {
-  return currentId;
-}
-
-function getHidden() {
-  return hidden;
-}
-
-function setHidden(newHidden) {
-  hidden = newHidden;
-}
-
-module.exports = {
-  renderSidebar,
-  updateSidebar,
-  getRoomId,
-  getHidden,
-  setHidden
-}
+module.exports = Sidebar

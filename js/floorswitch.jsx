@@ -1,58 +1,36 @@
-var React    = require('react');
-var ReactDom = require('react-dom');
-var styles   = require('./styles.js');
-var allFloors, 
-    currentFloorId;
+var React = require('react')
 
-class FloorSwitchComponent extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      visible: true,
-      loaded: true
-    }
-  }
+/**
+ * Shows a list of floors and allows the user to change the floor.
+ * Required props:
+ * floor - the current floor
+ * floors - a list of all floors
+ * onFloorChange - a function that handles the actual floor-switching
+ */
+function Floorswitch(props) {
+  // First, create a list of floors
+  var floors = props.floors.map(floor => {
+    // Add a highligting class if its the current floor
+    var current = floor === props.floor ? ' current-floor-button' : ''
 
-  render() {
-    console.log(allFloors);
     return (
-      <div className="floor-switch-container">
-        <div className="floor-switch-heading">
-          FLOOR
-        </div>
-
-        {
-          allFloors.map(function(thisFloor) {
-            console.log(thisFloor);
-            var buttonClass = "floor-button";
-            if (thisFloor == currentFloorId) {
-              buttonClass += " current-floor-button";
-            }
-            return (
-              <button className={buttonClass}>
-               {thisFloor}
-              </button>
-            )
-          })
-        }
-
-
+      <div key={floor}
+           className={'floor-button' + current}
+           onClick={e => props.onFloorChange(floor)}>
+        {floor}
       </div>
     )
-  }
+  })
+
+  // Then wrap them in some more markup
+  return (
+    <div className='floor-switch-container'>
+      <div className='floor-switch-heading'>
+        FLOOR
+      </div>
+      {floors}
+    </div>
+  )
 }
 
-function renderFloorSwitch(newAllFloors, newCurrentFloorId) {
-  allFloors = newAllFloors;
-  currentFloorId = newCurrentFloorId;
-
-  ReactDom.render(
-    <FloorSwitchComponent allFloors={allFloors}
-                          currentFloorId={currentFloorId} />,
-    document.querySelector("#floorswitch")
-  );
-}
-
-module.exports = {
-  renderFloorSwitch
-}
+module.exports = Floorswitch
